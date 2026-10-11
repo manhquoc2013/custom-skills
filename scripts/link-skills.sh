@@ -11,21 +11,22 @@ dest="$1"
 mkdir -p "$dest"
 
 names=(
-  installing-skills
-  coordinating-agents
-  routing-engineering-work
-  scaffolding-project
-  specifying-a-feature
-  implementing-from-spec
-  prompting-the-loop
-  running-the-loop
-  process
-  processing-the-flow
-  designing-interface
-  reviewing-code
-  refactoring-code
-  checking-lint
-  improving-performance
+  c-install
+  c-agents
+  c-route
+  c-scaffold
+  c-spec
+  c-implement
+  c-prompt
+  c-loop
+  c-process
+  c-flow
+  c-design
+  c-review
+  c-refactor
+  c-lint
+  c-perf
+  c-debug
 )
 
 copy_skill() {
@@ -43,8 +44,48 @@ copy_skill() {
   fi
 }
 
+legacy=(
+  installing-skills
+  coordinating-agents
+  routing-engineering-work
+  scaffolding-project
+  specifying-a-feature
+  implementing-from-spec
+  prompting-the-loop
+  running-the-loop
+  processing-the-flow
+  designing-interface
+  reviewing-code
+  refactoring-code
+  checking-lint
+  improving-performance
+  debugging-a-failure
+  install
+  agents
+  route
+  scaffold
+  spec
+  implement
+  prompt
+  loop
+  process
+  flow
+  design
+  review
+  refactor
+  lint
+  perf
+  debug
+)
+
 for name in "${names[@]}"; do
   copy_skill "$root/$name" "$dest/$name"
+done
+
+for name in "${legacy[@]}"; do
+  if [[ -L "$dest/$name" || -d "$dest/$name" ]]; then
+    rm -rf "$dest/$name"
+  fi
 done
 
 echo "installed ${#names[@]} skills into $dest"

@@ -1,5 +1,5 @@
 ---
-name: prompting-the-loop
+name: c-prompt
 description: >-
   Use when the user asks to viết prompt, write or rewrite a prompt, agent brief,
   slash command, automation instruction, or the text that will drive an agent
@@ -8,7 +8,7 @@ description: >-
 
 # Prompting the loop
 
-The deliverable is one prompt another session can run without the author in the room. Fill every section. A section that says "use your judgment" is unfinished. A question to the user follows the Questions section of `coordinating-agents`.
+The deliverable is one prompt another session can run without the author in the room. Fill every section. A section that says "use your judgment" is unfinished. A question to the user follows the Questions section of `c-agents`.
 
 ```markdown
 # {name}
@@ -23,7 +23,9 @@ What this run leaves untouched.
 Files, tickets, and prior state. Name the paths.
 
 ## Steps
-Ordered actions. Each step ends when a checkable condition is true.
+### 1
+The action.
+Done when: the checkable condition.
 
 ## Done when
 Checks a different pass can run: commands, files, or a state field.
@@ -60,7 +62,7 @@ Write the prompt into the file the user named. When they did not name one, write
 
 ## Coordination
 
-Read and follow `coordinating-agents` when more than one prompt is written. One worker owns one prompt file. The verifier checks that every section has a concrete value and that Done when names a command. The skill is done only when each prompt row is `pass`.
+Read and follow `c-agents` when more than one prompt is written. One worker owns one prompt file. The verifier checks that every section has a concrete value and that Done when names a command. The skill is done only when each prompt row is `pass`.
 
 ## Done
 

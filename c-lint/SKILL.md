@@ -1,5 +1,5 @@
 ---
-name: checking-lint
+name: c-lint
 description: >-
   Use when the user asks to lint, typecheck, fix warnings, or check logic
   the tools can show. Use for "lint", "sửa warning", "typecheck", "soi logic".
@@ -8,7 +8,7 @@ description: >-
 
 # Checking lint
 
-Use the commands this repo already has. Questions follow the Questions section of `coordinating-agents`.
+Use the commands this repo already has. Questions follow the Questions section of `c-agents`.
 
 ## Commands
 
@@ -24,4 +24,4 @@ Do not reformat a file the tool did not name. Do not change behavior to silence 
 
 After the tool run, read the files the command named, or the files the user named. A logic note needs a quoted line and the wrong outcome. Separate heading from the tool output. A note without an outcome is not a fix.
 
-A logic fix that changes what users see is `processing-the-flow`, not a lint edit.
+A logic fix that changes what users see is `c-flow`, not a lint edit.

@@ -1,5 +1,5 @@
 ---
-name: reviewing-code
+name: c-review
 description: >-
   Use when the user asks to review code, review a PR, review a branch, or
   review since a commit. Use for "review code", "soi diff", "review PR".
@@ -8,7 +8,7 @@ description: >-
 
 # Reviewing code
 
-Read the diff. Do not edit it in this pass. Questions follow the Questions section of `coordinating-agents`.
+Read the diff. Do not edit it in this pass. Questions follow the Questions section of `c-agents`.
 
 ## Pin the diff
 
@@ -26,6 +26,6 @@ Dispatch both readers in one response. Each reader gets the diff command and the
 
 ## Report
 
-Write `work/review/REVIEW.md`. When a feature slug exists, write `work/{slug}/review/REVIEW.md` instead. Two headings, `## Spec` and `## Standards`, then one line each: finding count and the worst finding on that axis.
+Write `work/review/REVIEW.md`. When a feature slug exists, write `work/{slug}/review/REVIEW.md` instead. Two headings, `## Spec` and `## Standards`. Under each: Count, Worst, then one heading per finding with the quoted line under it. `none` when that axis has no finding.
 
 Applying a finding is a later pass. One finding, then the command that shows it is gone. A finding the repo's own standard allows is left as a note. Push back when the finding does not match the diff or the spec, and cite the line.

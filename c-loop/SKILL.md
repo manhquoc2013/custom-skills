@@ -1,17 +1,17 @@
 ---
-name: running-the-loop
+name: c-loop
 description: >-
   Use when the user wants a recurring agent loop, daily triage, CI sweeper,
   PR babysitter, dependency sweep, changelog draft, post-merge cleanup, or to
   run until a goal with state, a budget, and a stop. Use for loop-engineering,
-  /loop, Automations, STATE.md, or L1/L2/L3.
+  /c-loop, Automations, STATE.md, or L1/L2/L3.
 ---
 
 # Running the loop
 
-A loop replaces the human as the prompter. It discovers work, assigns it, checks the result, and writes state. Week one reports. It does not merge. A question to the user follows the Questions section of `coordinating-agents`.
+A loop replaces the human as the prompter. It discovers work, assigns it, checks the result, and writes state. Week one reports. It does not merge. A question to the user follows the Questions section of `c-agents`.
 
-A loop is a recurring trigger plus state. A feature finished in this session is `processing-the-flow`, not this skill.
+A loop is a recurring trigger plus state. A feature finished in this session is `c-flow`, not this skill.
 
 ## Pick one pattern
 
@@ -24,7 +24,7 @@ A loop is a recurring trigger plus state. A feature finished in this session is 
 | Dependency or CVE noise | Dependency sweeper | Patch-only, majors escalate |
 | Stale release notes | Changelog drafter | L1 draft, never auto-publish |
 | TODO debt after merges | Post-merge cleanup | L1, off-peak |
-| One named change to finish in this session | Not a cadence loop | `processing-the-flow` |
+| One named change to finish in this session | Not a cadence loop | `c-flow` |
 
 One primary loop per concern. One state file per pattern. Triage reports. Action loops execute. Pause dependency work while the default branch is red. CI sweeper owns a failing check; PR babysitter does not re-fix that same branch in the same hour.
 
@@ -59,15 +59,19 @@ Do not start at L2 or L3 because the user asked to "just fix it". Missing a requ
 # STATE
 ## Level
 ## High priority
-- item | suggested action | attempts
+### item
+Action:
+Attempts: 0
 ## Watch
+none, or one item per heading
 ## Waiting on human
+none, or one item per heading
 ## Last run
 ## Kill switch
 paused: false
 ```
 
-A line that needs a paragraph is two items or an escalation. Every run reads this file first and deletes lines whose PR or issue is already closed.
+A heading that needs a paragraph is two items or an escalation. A run log entry is its own heading with Start, Seen, Actions, Escalations, and Outcome on separate lines. Every run reads this file first and deletes lines whose PR or issue is already closed.
 
 ## Constraints
 
@@ -91,7 +95,7 @@ Exit immediately when the kill switch is paused or the daily cap is spent. At ab
 2. Triage into the state sections. One line per item. When in doubt, Watch, not High priority. Triage does not invent a refactor.
 3. Apply the pattern rule below.
 4. At L1, stop after the state write. The human gets a brief: what was found, why it matters, and a link. Not the raw log.
-5. At L2, take one High priority item into a worktree. Follow `implementing-from-spec` for that slice only.
+5. At L2, take one High priority item into a worktree. Follow `c-implement` for that slice only.
 6. A new verifier pass runs the project tests and the brief's command for behavior this slice must leave unchanged. It rejects on failure, a disabled test, a flake treated as a code change, a denylist path, more than 10 files, a behavior the brief marked out of scope, or a prior result the command no longer matches. The implementer does not grade itself. If tests cannot be run, escalate.
 7. On the third failed attempt, move the item to Waiting on human with the last command output.
 8. Append the run log. Notify only when a human must decide.
@@ -106,7 +110,7 @@ Exit immediately when the kill switch is paused or the daily cap is spent. At ab
 
 ## Coordination
 
-Read and follow `coordinating-agents`. The worker that writes `STATE.md` does not verify it. The verifier checks the schema and, at L1, that product code was not edited. An L2 fix is a separate worker whose `owns` cell is that slice. The run is done only when the verifier row is `pass`.
+Read and follow `c-agents`. The worker that writes `STATE.md` does not verify it. The verifier checks the schema and, at L1, that product code was not edited. An L2 fix is a separate worker whose `owns` cell is that slice. The run is done only when the verifier row is `pass`.
 
 ## Refuse
 

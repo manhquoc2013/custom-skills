@@ -1,5 +1,5 @@
 ---
-name: designing-interface
+name: c-design
 description: >-
   Use when the task changes how a screen looks, feels, moves, or is interacted
   with: pages, components, layout, typography, color, motion, charts, or
@@ -13,26 +13,33 @@ Decide the product's visual system before styling a page. Record it in `design-s
 
 If a `ui-ux-pro-max` search script is installed, query it with one intent of 2–5 words. Use `--design-system` for a new product or page, `--domain` for one concern, `--stack` for the framework detected from the manifest. Persist with `--output-dir` at the repo root. When the script is absent, write MASTER from the checks below and say the brief is checklist-derived.
 
-Detect the stack from the manifest. When it is ambiguous, ask with the Questions section of `coordinating-agents`. A dashboard wants dense spacing. A marketing page wants sparse spacing. Pick one.
+Detect the stack from the manifest. When it is ambiguous, ask with the Questions section of `c-agents`. A dashboard wants dense spacing. A marketing page wants sparse spacing. Pick one.
 
 ## MASTER.md
 
 ```markdown
 ## Product
-type, audience, style words
+type
+audience
+style words
 ## Stack
 ## Color
-semantic tokens and the pairs that meet 4.5:1
+one token per line
+a pair that meets 4.5:1, on its own line
 ## Type
-family, body 16px, line-height 1.5
+family
+body 16px
+line-height 1.5
 ## Space
-density and the spacing steps
+density
+one spacing step per line
 ## Motion
-what moves, and the reduced-motion fallback
+what moves
+the reduced-motion fallback
 ## Reuse
-existing components this product already has
+one existing component per line
 ## Anti-patterns
-styles and patterns this product rejects
+one rejected pattern per line
 ```
 
 Match one style to the product. Keep icons as SVG with a text name. Put raw hex in the token file, and reference tokens from components.
@@ -50,7 +57,7 @@ Match one style to the product. Keep icons as SVG with a text name. Put raw hex 
 
 ## Coordination
 
-Read and follow `coordinating-agents` when more than one page is built. One worker owns `design-system/MASTER.md`. Each other worker owns one page file. The verifier for a page re-checks the checklist and the browser flow. The skill is done only when those rows are `pass`.
+Read and follow `c-agents` when more than one page is built. One worker owns `design-system/MASTER.md`. Each other worker owns one page file. The verifier for a page re-checks the checklist and the browser flow. The skill is done only when those rows are `pass`.
 
 ## Done
 

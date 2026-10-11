@@ -1,5 +1,5 @@
 ---
-name: coordinating-agents
+name: c-agents
 description: >-
   Use when a skill in this pack splits work or dispatches a subagent. Use when
   assigning agents, tracking what an agent will do or is doing, or deciding
@@ -38,23 +38,31 @@ These rules apply when the row matches. A missing plugin does not skip them. If 
 | Multi-step work has no plan yet | One task is one behavior, its failing test, its kept command, and its verify command. No setup-only task. Files in one wave do not overlap. A later task names the signature it consumes from an earlier task. | `writing-plans` |
 | About to edit the tree for a feature | Do not edit the default branch. Stay in the current isolated checkout when you are already in one. Otherwise use a feature branch or worktree. Unrelated dirty files stop the work. | `using-git-worktrees` |
 | About to write production code | Watch a test fail on the new behavior, then write the code. Code written first is deleted. Refactor only after that test is green, as its own pass. | `test-driven-development` |
-| Bug, red test, or no command yet that fails on the symptom | Redact secrets. No hypothesis until one command is red on the user's symptom and every remaining step is load-bearing. Then write 3 falsifiable hypotheses. Change one variable at a time. Remove debug tags before done. Re-run the original repro. | `systematic-debugging`, and `diagnosing-bugs` when it is installed |
+| A hard bug: the red command does not name the line to edit, and it is not a new test waiting for its behavior | Read `c-debug` and obey `--find` or `--fix`. No hypothesis until one command is red on the user's symptom. | `systematic-debugging`, and `diagnosing-bugs` when it is installed |
+| A syntax error, a lint or type line, or a missing symbol the tool names | Fix the named line. Do not open `c-debug`. Lint and types are `c-lint`. | `c-lint` |
 | Two or more workers with disjoint files | Dispatch them in one response. | `dispatching-parallel-agents` |
 | A worker just returned | The verifier looks for reasons to reject. Spec and Standards stay separate lines. A documented standards miss rejects. A smell the repo's own standard allows is a note, not a reject. | `requesting-code-review` |
-| User asks to review a diff, PR, or branch | Read-only. Two axes, Spec and Standards, in one dispatch. Do not edit in that pass. | `reviewing-code`, and `requesting-code-review` when it is installed |
-| User asks to refactor without a behavior change | Tests are green first. One candidate, then the same test command again. | `refactoring-code` |
-| User asks to lint, typecheck, or clear tool warnings | Run the repo's own command. Fix only the lines it printed. | `checking-lint` |
-| User asks to make a path faster | Record one measurement, change that path once, measure the same command again. | `improving-performance` |
+| User asks to review a diff, PR, or branch | Read-only. Two axes, Spec and Standards, in one dispatch. Do not edit in that pass. | `c-review`, and `requesting-code-review` when it is installed |
+| User asks to refactor without a behavior change | Tests are green first. One candidate, then the same test command again. | `c-refactor` |
+| User asks to lint, typecheck, or clear tool warnings | Run the repo's own command. Fix only the lines it printed. | `c-lint` |
+| User asks to make a path faster | Record one measurement, change that path once, measure the same command again. | `c-perf` |
 | About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. When the diff can change a behavior that is not the claimed one, quote that behavior's prior result and the command that still matches it. A green suite does not replace that quote. | `verification-before-completion` |
 | Branch is ready to merge or open a PR | The suite is green in this turn. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
 
+## Records
+
+Any file this pack writes follows the Records section of `c-flow`. A heading is the label. The next line is the value. One fact per line. Do not join fields with `|`. An empty section is `none`.
+
 ## Roster
 
-Write the roster before the first dispatch. Use `work/{slug}/roster.md` when a feature slug exists. Otherwise use `work/roster.md`. One row per agent. Update `status` when that agent is dispatched, when it returns, and when the verdict is in.
+Write the roster before the first dispatch. Use `work/{slug}/roster.md` when a feature slug exists. Otherwise use `work/roster.md`. One heading per agent. Update `Status` when that agent is dispatched, when it returns, and when the verdict is in.
 
 ```markdown
-| id | role | task | owns | status |
-| parent | coordinator | the skill name | none | running |
+## parent
+Role: coordinator
+Task: the skill name
+Owns: none
+Status: running
 ```
 
 - **coordinator** assigns rows and does not do a worker's task.

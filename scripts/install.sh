@@ -82,7 +82,7 @@ status_of() {
   local current
   current="$(installed_version "$dest")"
   if [[ -z "$current" ]]; then
-    if [[ -L "$dest/processing-the-flow" || -d "$dest/processing-the-flow" ]]; then
+    if [[ -d "$dest/c-flow" || -L "$dest/c-flow" || -d "$dest/flow" || -L "$dest/flow" || -d "$dest/processing-the-flow" || -L "$dest/processing-the-flow" ]]; then
       echo "đã gắn, chưa ghi phiên bản"
     else
       echo "chưa cài"
@@ -343,7 +343,7 @@ case "$mode" in
     for i in "${found[@]}"; do
       while IFS= read -r dest; do
         current="$(installed_version "$HOME/$dest")"
-        if [[ -n "$current" && "$current" != "$version" ]] || [[ -z "$current" && -e "$HOME/$dest/processing-the-flow" ]]; then
+        if [[ -n "$current" && "$current" != "$version" ]] || [[ -z "$current" && ( -e "$HOME/$dest/c-flow" || -e "$HOME/$dest/flow" || -e "$HOME/$dest/processing-the-flow" ) ]]; then
           install_one "$dest"
         elif [[ "$current" == "$version" ]]; then
           echo "Giữ ${labels[$i]} $dest ở $version"

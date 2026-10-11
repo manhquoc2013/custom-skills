@@ -1,5 +1,5 @@
 ---
-name: installing-skills
+name: c-install
 description: >-
   Use when the user wants to install or update this skill pack, choose which
   IDE receives it, or detect Cursor, Claude, Antigravity, Codex on the machine.
@@ -8,7 +8,7 @@ description: >-
 
 # Installing skills
 
-Run the installer. It copies each skill folder into the IDE skill directory as a real directory with a real `SKILL.md`, the same shape as other installed skills. Do not symlink the skill directory. When you ask which IDE or whether to install the recommended bundles, follow the Questions section of `coordinating-agents`.
+Run the installer. It copies each skill folder into the IDE skill directory as a real directory with a real `SKILL.md`, the same shape as other installed skills. Do not symlink the skill directory. When you ask which IDE or whether to install the recommended bundles, follow the Questions section of `c-agents`.
 
 When this repo is not already on the machine, one command downloads a snapshot into a temp directory, installs, then deletes that directory:
 
@@ -49,4 +49,4 @@ On Windows PowerShell, from this repo:
 ./scripts/install.ps1 --update
 ```
 
-A new version is a new `VERSION` file plus `--update`, which recopies the skill folders. After that, tell the user to open a new chat and type `/processing-the-flow`.
+A new version is a new `VERSION` file plus `--update`, which recopies the skill folders. After that, tell the user to open a new chat and type `/c-flow`.

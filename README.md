@@ -75,7 +75,7 @@ Git Bash trên Windows chạy `./scripts/install.sh` như macOS. Muốn chép v�
 Agent không tự quét thư mục skill thì thêm một dòng vào file hướng dẫn của nó (`AGENTS.md`, system prompt, hoặc file rules):
 
 ```markdown
-Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử lý luồng, đọc và làm theo `processing-the-flow/SKILL.md` trong bản clone của https://github.com/manhquoc2013/custom-skills. Các skill cùng thư mục được file đó nêu tên thì đọc tiếp.
+Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử lý luồng, đọc và làm theo `c-flow/SKILL.md` trong bản clone của https://github.com/manhquoc2013/custom-skills. Các skill cùng thư mục được file đó nêu tên thì đọc tiếp.
 ```
 
 Đổi đường dẫn nếu repo nằm chỗ khác. Định dạng thư mục vẫn là `<tên>/SKILL.md` với `name` và `description` ở đầu file.
@@ -85,7 +85,7 @@ Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử 
 Xóa đúng thư mục skill đã cài. Không xóa thư mục trong repo này.
 
 ```bash
-rm -rf ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineering-work,scaffolding-project,specifying-a-feature,implementing-from-spec,prompting-the-loop,running-the-loop,process,processing-the-flow,designing-interface,reviewing-code,refactoring-code,checking-lint,improving-performance} ~/.cursor/skills/.engineering-skills-version
+rm -rf ~/.cursor/skills/{c-install,c-agents,c-route,c-scaffold,c-spec,c-implement,c-prompt,c-loop,c-process,c-flow,c-design,c-review,c-refactor,c-lint,c-perf,c-debug} ~/.cursor/skills/.engineering-skills-version
 ```
 
 Đổi `~/.cursor/skills` thành thư mục của Claude, Antigravity, hoặc Codex nếu gỡ ở đó.
@@ -95,7 +95,7 @@ rm -rf ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineeri
 Hai cách:
 
 - Gõ `/tên-skill` khi muốn ép đúng nhánh.
-- Nói việc cần làm. Agent tự mở skill có mô tả khớp. Câu chưa chỉ nhánh thì `/routing-engineering-work` chọn một skill rồi làm theo skill đó.
+- Nói việc cần làm. Agent tự mở skill có mô tả khớp. Câu chưa chỉ nhánh thì `/c-route` chọn một skill rồi làm theo skill đó.
 
 Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trước xong. Chat đang mở từ trước lúc cài không thấy skill mới. Mở chat khác.
 
@@ -103,34 +103,38 @@ Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trư
 
 | Bạn đang muốn | Gõ | Xong khi |
 |---------------|-----|----------|
-| Làm xong một chức năng, một bug, hoặc một ý từ đầu đến PR | `/process` hoặc `/processing-the-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
-| Repo chưa có lệnh test, file harness, chỗ ghi việc | `/scaffolding-project` | Session mới build và test được mà không hỏi lại |
-| Chỉ viết spec và plan, chưa đụng code | `/specifying-a-feature` | Có `GO` hoặc `NO-GO`. Plan chỉ xuất hiện sau `GO` |
-| Plan đã có và đã `GO`, làm đúng một task | `/implementing-from-spec` | Lệnh kiểm của task đó qua một lượt verifier riêng |
-| Viết prompt, agent brief, hoặc lệnh slash cho session khác chạy | `/prompting-the-loop` | File prompt đủ mục, mức mặc định là báo cáo |
-| Nghĩ ra một vòng sẽ chạy lặp lại (triage, CI, PR, changelog) | `/prompting-the-loop`, rồi `/running-the-loop` | Prompt có trước. Vòng tuần đầu chỉ ghi báo cáo |
-| Vòng đã có, chạy một lượt: triage sáng, CI đỏ, PR kẹt, dependency, changelog, dọn sau merge | `/running-the-loop` | `STATE.md` đúng khuôn và code sản phẩm không bị sửa ở mức báo cáo |
-| Đổi nhìn, bấm, chữ, màu, chuyển động, hoặc accessibility của một màn | `/designing-interface` | `MASTER.md` có, và luồng đã bấm thử kể cả trống và lỗi |
-| Soi diff, PR, hoặc nhánh, không sửa trong lượt đó | `/reviewing-code` | `REVIEW.md` có hai mục Spec và Standards |
-| Cấu trúc lại, hành vi giữ nguyên | `/refactoring-code` | Cùng lệnh test, output sau khớp output trước |
-| Chạy lint hoặc typecheck của repo, sửa đúng dòng công cụ báo | `/checking-lint` | Lệnh đó sạch theo luật fail của chính nó |
-| Làm một đường chạy nhanh hơn | `/improving-performance` | Có số đo trước và sau trên cùng một lệnh |
-| Chưa rõ câu nói thuộc nhánh nào | `/routing-engineering-work` | Đã chọn một hàng ở trên và làm theo skill đó |
-| Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/installing-skills` | IDE bạn chọn có bản copy của skill |
+| Bắt đầu một chức năng, một bug, hoặc một ý. Lượt này chỉ tra code và hỏi, không sửa code sản phẩm | `/c-process` | Đã hỏi những gì còn chưa chốt, rồi đọc `/c-flow` để làm tiếp |
+| Làm hết một chức năng đến PR, hoặc làm tiếp từ `FLOW.md` đang dở | `/c-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
+| Repo chưa có lệnh test, file harness, chỗ ghi việc | `/c-scaffold` | Session mới build và test được mà không hỏi lại |
+| Chỉ viết spec và plan, chưa đụng code | `/c-spec` | Có `GO` hoặc `NO-GO`. Plan chỉ xuất hiện sau `GO` |
+| Plan đã có và đã `GO`, làm đúng một task | `/c-implement` | Lệnh kiểm của task đó qua một lượt verifier riêng |
+| Viết prompt, agent brief, hoặc lệnh slash cho session khác chạy | `/c-prompt` | File prompt đủ mục, mức mặc định là báo cáo |
+| Nghĩ ra một vòng sẽ chạy lặp lại (triage, CI, PR, changelog) | `/c-prompt`, rồi `/c-loop` | Prompt có trước. Vòng tuần đầu chỉ ghi báo cáo |
+| Vòng đã có, chạy một lượt: triage sáng, CI đỏ, PR kẹt, dependency, changelog, dọn sau merge | `/c-loop` | `STATE.md` đúng khuôn và code sản phẩm không bị sửa ở mức báo cáo |
+| Đổi nhìn, bấm, chữ, màu, chuyển động, hoặc accessibility của một màn | `/c-design` | `MASTER.md` có, và luồng đã bấm thử kể cả trống và lỗi |
+| Soi diff, PR, hoặc nhánh, không sửa trong lượt đó | `/c-review` | `REVIEW.md` có hai mục Spec và Standards |
+| Cấu trúc lại, hành vi giữ nguyên | `/c-refactor` | Cùng lệnh test, output sau khớp output trước |
+| Chạy lint hoặc typecheck của repo, sửa đúng dòng công cụ báo | `/c-lint` | Lệnh đó sạch theo luật fail của chính nó |
+| Làm một đường chạy nhanh hơn | `/c-perf` | Có số đo trước và sau trên cùng một lệnh |
+| Tìm lỗi. `--find` chỉ ra nguyên nhân. `--fix` sửa sau khi nguyên nhân đã được quote | `/c-debug` | `--find` có `CAUSE.md` và không sửa code sản phẩm. `--fix` có lệnh đỏ gốc chạy lại sau sửa |
+| Chưa rõ câu nói thuộc nhánh nào | `/c-route` | Đã chọn một hàng ở trên và làm theo skill đó |
+| Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/c-install` | IDE bạn chọn có bản copy của skill |
 
-`/coordinating-agents` là luật nội bộ. Skill đang làm việc tự đọc nó khi chia subagent. Bạn không cần gõ, trừ khi muốn xem ai đang giữ file nào.
+`/c-agents` là luật nội bộ. Skill đang làm việc tự đọc nó khi chia subagent. Bạn không cần gõ, trừ khi muốn xem ai đang giữ file nào.
 
-Màn hình nằm trong một chức năng thì vẫn gọi `/processing-the-flow`. Skill đó gọi `/designing-interface` lúc chốt thiết kế và lúc kiểm màn hình. Skill giao diện không lấy mất các cổng plan, code, verify.
+Màn hình nằm trong một chức năng thì vẫn gọi `/c-flow`. Skill đó gọi `/c-design` lúc chốt thiết kế và lúc kiểm màn hình. Skill giao diện không lấy mất các cổng plan, code, verify.
 
-Bug của một chức năng cũng là `/processing-the-flow`: phải có một lệnh đỏ đúng triệu chứng trước khi đoán nguyên nhân. Vòng bảo trì không sửa bug feature đó.
+`/c-flow` chỉ gọi `/c-debug` với `--fix` khi bug khó: lệnh đỏ không chỉ đúng dòng cần sửa, và đó không phải test mới đang chờ code. Sai cú pháp, lint, type, import thiếu, và test đỏ vì chưa viết behavior thì sửa tại chỗ. `--find` chỉ khi bạn gọi `/c-debug` để dừng ở nguyên nhân. Vòng bảo trì không sửa bug feature đó.
 
-Sửa một chữ, một import, hoặc một tên chỉ đi tắt trong `/processing-the-flow` khi bạn nói đó là sửa một dòng và nêu đúng chữ cần đổi.
+Sửa một chữ, một import, hoặc một tên chỉ đi tắt trong `/c-flow` khi bạn nói đó là sửa một dòng và nêu đúng chữ cần đổi.
 
-Ý còn sương, chưa nói được kết quả mong đợi, thì `/specifying-a-feature` ghi bản đồ và dừng sau một quyết định. Chưa có plan thì không gọi `/implementing-from-spec`.
+Ý còn sương, chưa nói được kết quả mong đợi, thì `/c-spec` ghi bản đồ và dừng sau một quyết định. Chưa có plan thì không gọi `/c-implement`.
 
 ## Làm một việc cho xong
 
-Gọi `/process` hoặc `/processing-the-flow` rồi viết yêu cầu ngay trong cùng một tin nhắn.
+Gõ `/c-process` rồi viết yêu cầu ngay trong cùng một tin nhắn. Lệnh đó tra code và hỏi. Nó không sửa code sản phẩm. Hết phần hỏi, agent đọc `/c-flow` và tự đi tiếp: plan, sửa code, verify, ship.
+
+`/c-flow` là cả đường đó. Gõ `/c-flow` khi muốn vào thẳng, hoặc khi chat sau cần làm tiếp từ `work/{slug}/FLOW.md`. Không gõ `/c-process` để làm tiếp một việc đã có file trạng thái.
 
 Một lệnh là đủ. Agent tự tra fact trong repo. Việc cần bạn quyết thì nó đưa hết câu đang hỏi được vào một phiếu. Mỗi đề xuất là một lựa chọn A, B, C, D… Đề xuất đầu ghi `(Recommended)`. Lựa chọn cuối luôn là `Người dùng quyết định`. Bạn trả lời hết rồi bấm gửi một lần. Câu phụ thuộc câu trong phiếu đó thì hỏi sau khi đã gửi. Thuật ngữ vừa chốt được ghi vào `GLOSSARY.md`. ADR chỉ khi quyết định khó đảo, người sau sẽ ngạc nhiên, và có đánh đổi thật.
 
@@ -156,7 +160,7 @@ Sửa typo, import, hoặc đổi tên chỉ đi tắt khi bạn nói rõ đó l
 
 ## Làm tiếp ở chat sau
 
-Gọi lại `/processing-the-flow`. Agent đọc `work/{slug}/FLOW.md` và làm từ phase đang dở. File trên đĩa là nguồn đúng, không phải trí nhớ chat cũ.
+Gọi lại `/c-flow`, không gọi `/c-process`. Agent đọc `work/{slug}/FLOW.md` và làm từ phase đang dở. File trên đĩa là nguồn đúng, không phải trí nhớ chat cũ.
 
 ```text
 work/{slug}/
@@ -184,11 +188,11 @@ Quy trình được rút từ các repo công khai, không sao chép mã nguồn
 - [get-shit-done](https://github.com/gsd-build/get-shit-done) đã lưu trữ; bản đang chạy là [GSD Core](https://github.com/open-gsd/gsd-core)
 - [superpowers](https://github.com/obra/superpowers)
 
-Database tìm style của ui-ux-pro-max không nằm trong repo này. Khi skill đó được cài riêng, `designing-interface` sẽ gọi script search của nó.
+Database tìm style của ui-ux-pro-max không nằm trong repo này. Khi skill đó được cài riêng, `c-design` sẽ gọi script search của nó.
 
 ## Superpowers
 
-Luật cốt lõi nằm trong `coordinating-agents`. Pack vẫn chạy khi Superpowers chưa cài. Khi plugin có trên máy, agent đọc thêm skill đó ở cổng tương ứng:
+Luật cốt lõi nằm trong `c-agents`. Pack vẫn chạy khi Superpowers chưa cài. Khi plugin có trên máy, agent đọc thêm skill đó ở cổng tương ứng:
 
 | Cổng | Skill Superpowers |
 |------|-------------------|
@@ -204,8 +208,8 @@ Luật cốt lõi nằm trong `coordinating-agents`. Pack vẫn chạy khi Super
 
 File trạng thái vẫn nằm trong `work/{slug}/`. Superpowers không thay câu hỏi context và không được báo xong khi còn `REQ-` chưa khớp.
 
-`coordinating-agents` bảo agent đọc skill Superpowers khi tình huống khớp, kể cả skill không nằm trong bảng cổng của `/processing-the-flow`. Đọc và làm theo. Chỉ nêu tên skill là chưa gọi.
+`c-agents` bảo agent đọc skill Superpowers khi tình huống khớp, kể cả skill không nằm trong bảng cổng của `/c-flow`. Đọc và làm theo. Chỉ nêu tên skill là chưa gọi.
 
 ## So với skill của Matt Pocock
 
-[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, hai trục Spec và Standards, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Review trong pack này giữ hai trục đó và không gộp một bảng xếp hạng. Refactor chỉ đào sâu một chỗ sau khi test đang xanh, không viết báo cáo HTML. Lint dùng lệnh sẵn có của repo, không tự gắn Prettier hay Husky. Perf cần một số đo trước khi sửa. Pack này giữ điều phối subagent và đối chiếu từng `REQ-`. Grill hỏi cả nhóm câu được hỏi ngay, không hỏi từng câu một như bản brainstorming dài. Ý tưởng còn sương thì dừng để chốt một quyết định. Prototype là mã vứt đi. Database style của ui-ux-pro-max vẫn là phần cài thêm; checklist ưu tiên của nó nằm trong `designing-interface`.
+[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, hai trục Spec và Standards, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Review trong pack này giữ hai trục đó và không gộp một bảng xếp hạng. Refactor chỉ đào sâu một chỗ sau khi test đang xanh, không viết báo cáo HTML. Lint dùng lệnh sẵn có của repo, không tự gắn Prettier hay Husky. Perf cần một số đo trước khi sửa. Pack này giữ điều phối subagent và đối chiếu từng `REQ-`. Grill hỏi cả nhóm câu được hỏi ngay, không hỏi từng câu một như bản brainstorming dài. Ý tưởng còn sương thì dừng để chốt một quyết định. Prototype là mã vứt đi. Database style của ui-ux-pro-max vẫn là phần cài thêm; checklist ưu tiên của nó nằm trong `c-design`.

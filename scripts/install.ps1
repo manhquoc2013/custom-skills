@@ -37,21 +37,22 @@ function Test-AgentPresent($detect) {
 }
 
 $names = @(
-  "installing-skills",
-  "coordinating-agents",
-  "routing-engineering-work",
-  "scaffolding-project",
-  "specifying-a-feature",
-  "implementing-from-spec",
-  "prompting-the-loop",
-  "running-the-loop",
-  "process",
-  "processing-the-flow",
-  "designing-interface",
-  "reviewing-code",
-  "refactoring-code",
-  "checking-lint",
-  "improving-performance"
+  "c-install",
+  "c-agents",
+  "c-route",
+  "c-scaffold",
+  "c-spec",
+  "c-implement",
+  "c-prompt",
+  "c-loop",
+  "c-process",
+  "c-flow",
+  "c-design",
+  "c-review",
+  "c-refactor",
+  "c-lint",
+  "c-perf",
+  "c-debug"
 )
 
 function Remove-SkillPath($path) {
@@ -74,6 +75,19 @@ function Install-One($rel) {
   New-Item -ItemType Directory -Force -Path $dest | Out-Null
   foreach ($name in $names) {
     Copy-Skill (Join-Path $root $name) (Join-Path $dest $name)
+  }
+  $legacy = @(
+    "installing-skills", "coordinating-agents", "routing-engineering-work",
+    "scaffolding-project", "specifying-a-feature", "implementing-from-spec",
+    "prompting-the-loop", "running-the-loop", "processing-the-flow",
+    "designing-interface", "reviewing-code", "refactoring-code",
+    "checking-lint", "improving-performance", "debugging-a-failure",
+    "install", "agents", "route", "scaffold", "spec", "implement",
+    "prompt", "loop", "process", "flow", "design", "review",
+    "refactor", "lint", "perf", "debug"
+  )
+  foreach ($name in $legacy) {
+    Remove-SkillPath (Join-Path $dest $name)
   }
   Set-Content -Path (Join-Path $dest ".engineering-skills-version") -Value $version
   Write-Output "installed $($names.Count) skills into $dest ($version)"
@@ -204,7 +218,7 @@ for ($n = 0; $n -lt $found.Count; $n++) {
   if (Test-Path $marker) {
     $current = (Get-Content $marker -Raw).Trim()
     if ($current -eq $version) { $state = "đã cài $current" } else { $state = "đã cài $current, repo là $version" }
-  } elseif (Test-Path (Join-Path $dest "processing-the-flow")) {
+  } elseif ((Test-Path (Join-Path $dest "c-flow")) -or (Test-Path (Join-Path $dest "flow")) -or (Test-Path (Join-Path $dest "processing-the-flow"))) {
     $state = "đã gắn, chưa ghi phiên bản"
   }
   $where = ($found[$n].Dests -join ",")
@@ -234,7 +248,7 @@ if ($mode -eq "--update") {
       $current = if (Test-Path $marker) { (Get-Content $marker -Raw).Trim() } else { "" }
       if ($current -eq $version) {
         Write-Output "Giữ $($target.Label) $rel ở $version"
-      } elseif ($current -or (Test-Path (Join-Path $dest "processing-the-flow"))) {
+      } elseif ($current -or (Test-Path (Join-Path $dest "c-flow")) -or (Test-Path (Join-Path $dest "flow")) -or (Test-Path (Join-Path $dest "processing-the-flow"))) {
         Install-One $path
       }
     }

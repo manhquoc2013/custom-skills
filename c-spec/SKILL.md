@@ -1,5 +1,5 @@
 ---
-name: specifying-a-feature
+name: c-spec
 description: >-
   Use when the user wants a new feature, change, or refactor from an idea, a
   document, a ticket, or the current conversation, and implementation has not
@@ -9,11 +9,11 @@ description: >-
 
 # Specifying a feature
 
-No implementation in this skill. The artifact is a verdict and, only after GO, a plan. Code starts in `implementing-from-spec`.
+No implementation in this skill. The artifact is a verdict and, only after GO, a plan. Code starts in `c-implement`.
 
-When this skill is the top-level call, run the Grill section of `processing-the-flow` before research. Do not plan while that frontier is still open. Any other question follows the Questions section of `coordinating-agents`.
+When this skill is the top-level call, run the Grill section of `c-flow` before research. Do not plan while that frontier is still open. Any other question follows the Questions section of `c-agents`.
 
-When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again. Do not rewrite Requirements, Failure, or Out of scope. Append a Kept row only when research has run the command and quoted the output. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
+When `c-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again. Do not rewrite Requirements, Failure, or Out of scope. Append a Kept row only when research has run the command and quoted the output. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
 
 ## Pick the shape
 
@@ -27,9 +27,13 @@ Name the destination in one or two lines (a spec, a decision, or a change). Writ
 
 ```markdown
 ## Destination
+one or two lines
 ## Decisions so far
+one decision per line, or none
 ## Not yet specified
+one question per line, or none
 ## Out of scope
+one item per line, or none
 ```
 
 Each open decision is its own note under `work/maps/{slug}/` with `## Question` and a type: research, prototype, grilling, or task. A question that cannot be phrased sharply stays under Not yet specified. Work past the destination goes under Out of scope.
@@ -52,13 +56,22 @@ Write `work/{slug}/plan/SPEC.md`:
 ## Problem statement
 ## Solution
 ## User stories
+### 1
+As a <actor>, I want <feature>, so that <benefit>.
 ## Implementation decisions
+one decision per line
 ## Testing decisions
+### seam
+Catches:
+Misses:
 ## Out of scope
 ## Seams
+### name
+Catches:
+Misses:
 ```
 
-User stories are numbered: As a <actor>, I want <feature>, so that <benefit>. Implementation decisions name modules, interfaces, schema, and API contracts. Leave out file paths and code. Testing decisions name the public behavior and the prior tests to copy. Publish to the issue tracker from `docs/agents/issue-tracker.md` when that file exists, labelled `ready-for-agent`.
+One story is one outcome, not a chain of steps. Implementation decisions name modules, interfaces, schema, and API contracts. Leave out file paths and code. Testing decisions name the public behavior and the prior tests to copy. Publish to the issue tracker from `docs/agents/issue-tracker.md` when that file exists, labelled `ready-for-agent`.
 
 ## Open feature — research, then plan
 
@@ -70,21 +83,26 @@ Read `REQUEST.md` and any project principles. If a requirement is ambiguous, sto
 ## Value
 who is hurt if this ships or does not
 ## Already
-file | symbol | behavior
+### symbol
+File:
+Behavior:
 ## Touches
-behavior not in Requirements that this approach can change | file | symbol
+### behavior
+File:
+Symbol:
 ## Approach
 build, reuse, or decline
 ## Verdict
-GO | CONDITIONAL | NO-GO
+GO, CONDITIONAL, or NO-GO
 ## Condition
+the decision, or none
 ```
 
 Every Already or Touches claim cites a file and a symbol. Do not invent an endpoint or a type. A Touches row with no citation is rejected. Do not change frozen Requirements, Failure, or Out of scope. When a Touches behavior is missing from Kept, append that Kept row only after its command has been run and the output quoted. No such command: set `Stop` to `needs-human`. Do not add a `REQ-`.
 
 Stop on NO-GO. State the reason and the smallest change that would reopen it.
 
-On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md` with every heading from the CONTEXT template in `processing-the-flow`. A screen also follows `designing-interface` and writes `plan/ux.md`.
+On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md` with every heading from the CONTEXT template in `c-flow`. A screen also follows `c-design` and writes `plan/ux.md`.
 
 Then write:
 
@@ -97,12 +115,22 @@ Each task is one `REQ-` id:
 ```markdown
 # PLAN
 ## Goal
-quoted from CONTEXT
+one sentence quoted from CONTEXT
 ## Frozen
-Requirements, Failure, Out of scope, and Kept, copied
+Requirements, Failure, Out of scope, and Kept, copied as labeled lines
 ## Waves
 ### Wave 1
-- [ ] T1 | REQ-1 | files | kept: command => prior result, or none | produces: signature or none | failing test, then the change | verify: command
+one sentence
+#### T1
+REQ: REQ-1
+Files: one path per line
+Consumes: signature, or none
+Produces: signature, or none
+Kept command:
+Kept result:
+Change: one sentence
+Verify command:
+Verify result: what a pass looks like
 ```
 
 A task is one behavior with its own test cycle. Fold setup into the task that needs it. A setup-only line is not a task. Tasks in one wave must not edit the same file. A task without a verify command is not a task. A task whose files already exist names the command that locks each public behavior this diff can change. `none` is allowed only when that seam has no public behavior yet. The plan does not add work `CONTEXT.md` marked out of scope.
@@ -111,7 +139,7 @@ Before publishing, reject the spec or plan when it contains a placeholder, a con
 
 ## Coordination
 
-Read and follow `coordinating-agents` when research is split. One worker owns the code notes, one owns the product notes, and one owns the feasibility notes. The planner starts after they return. The verifier checks that every `REQ-` id has one task, one kept command or `none`, and one verify command. The skill is done only when that verifier row is `pass`.
+Read and follow `c-agents` when research is split. One worker owns the code notes, one owns the product notes, and one owns the feasibility notes. The planner starts after they return. The verifier checks that every `REQ-` id has one task, one kept command or `none`, and one verify command. The skill is done only when that verifier row is `pass`.
 
 ## Done
 

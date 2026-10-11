@@ -1,5 +1,5 @@
 ---
-name: scaffolding-project
+name: c-scaffold
 description: >-
   Use when the repo is empty, has no agent harness, or the user asks to dựng dự án,
   scaffold, bootstrap, or start a project before features are built.
@@ -15,11 +15,11 @@ Read what exists: git remote, package or build manifests, test scripts, `AGENTS.
 
 ## 2. Settle the open forks
 
-Ask one round for every fork inspection left open. Follow the Questions section of `coordinating-agents`.
+Ask one round for every fork inspection left open. Follow the Questions section of `c-agents`.
 
 - **Issue tracker.** GitHub remote → GitHub issues. No remote → markdown files in `work/`. Record the choice in `docs/agents/issue-tracker.md`.
-- **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `running-the-loop`. Write `LOOP.md`, one `STATE.md` per pattern, `loop-budget.md`, `loop-run-log.md`, and `loop-constraints.md` with the denylist and no auto-merge.
-- **UI product.** If the product has screens, follow `designing-interface` far enough to write `design-system/MASTER.md` before feature work.
+- **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `c-loop`. Write `LOOP.md`, one `STATE.md` per pattern, `loop-budget.md`, `loop-run-log.md`, and `loop-constraints.md` with the denylist and no auto-merge.
+- **UI product.** If the product has screens, follow `c-design` far enough to write `design-system/MASTER.md` before feature work.
 
 Domain docs default to one `GLOSSARY.md` and `docs/adr/` at the repo root. Create `GLOSSARY.md` when the first term is settled. Create `docs/adr/0001-title.md` when the first decision must constrain later work. Skip both until that happens.
 
@@ -35,14 +35,14 @@ The file states:
 - Commands to install, run, test, and lint, copied from the manifests
 - How to verify a change in the running app (URL or entry command)
 - Where issues live (`docs/agents/issue-tracker.md`)
-- Where feature work lives (`work/{slug}/`, see `specifying-a-feature`)
+- Where feature work lives (`work/{slug}/`, see `c-spec`)
 - Denylist: auth, payments, secrets, infra — human merge
 
 Add `work/README.md` with the pipeline: discuss → plan → execute → verify → ship. A new product also gets `PROJECT.md` (one paragraph and non-goals) and `REQUIREMENTS.md` (ids the later verify step can check). Create `docs/agents/issue-tracker.md` with the tracker choice and the five labels `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix` when the tracker is GitHub and those labels are missing.
 
 ## Coordination
 
-Read and follow `coordinating-agents` when more than one file is written. One worker owns each of `AGENTS.md` or `CLAUDE.md`, `docs/agents/issue-tracker.md`, `PROJECT.md`, `REQUIREMENTS.md`, and `design-system/MASTER.md`. The verifier checks that the harness commands match the manifests. The skill is done only when those rows are `pass`.
+Read and follow `c-agents` when more than one file is written. One worker owns each of `AGENTS.md` or `CLAUDE.md`, `docs/agents/issue-tracker.md`, `PROJECT.md`, `REQUIREMENTS.md`, and `design-system/MASTER.md`. The verifier checks that the harness commands match the manifests. The skill is done only when those rows are `pass`.
 
 ## Done
 
