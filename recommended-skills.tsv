@@ -1,0 +1,4 @@
+# id|why|git repo|branch|skill directories, comma-separated, relative to the repo
+superpowers|Superpowers: brainstorm, plan, TDD, debug, verify, ship|https://github.com/obra/superpowers.git|main|skills/using-superpowers,skills/brainstorming,skills/writing-plans,skills/using-git-worktrees,skills/test-driven-development,skills/systematic-debugging,skills/dispatching-parallel-agents,skills/requesting-code-review,skills/verification-before-completion,skills/finishing-a-development-branch
+diagnosing-bugs|vòng đỏ đúng triệu chứng trước khi đoán nguyên nhân|https://github.com/mattpocock/skills.git|main|skills/engineering/diagnosing-bugs
+ui-ux-pro-max|tìm palette, font, và checklist UI|https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git|main|.claude/skills/ui-ux-pro-max

@@ -39,12 +39,12 @@ Match one style to the product. Keep icons as SVG with a text name. Put raw hex 
 
 ## Checks, in order
 
-1. Contrast 4.5:1, visible focus, a name on every icon button.
-2. Targets at least 44px, gaps at least 8px, a loading state for every wait.
-3. Images have reserved space. Lists that can grow are windowed.
-4. Breakpoints are mobile-first. No horizontal scroll. Zoom stays on.
-5. Body text stays at least 16px. Errors sit on the field, labels stay visible without the placeholder.
-6. Motion explains a change. Exits are shorter than enters. `prefers-reduced-motion` disables non-essential motion.
+1. Contrast 4.5:1, visible focus, a name on every icon button. Icons are SVG, not emoji.
+2. Targets at least 44px, gaps at least 8px, a loading state for every wait. No action that exists only on hover.
+3. Images have reserved space and lazy-load when offscreen. Lists that can grow are windowed.
+4. Breakpoints are mobile-first. No horizontal scroll. Zoom stays on. A phone nav has at most 5 items, and the screen has a deep link.
+5. Body text stays at least 16px. Errors sit on the field, labels stay visible without the placeholder. A long form reveals later fields after the first valid step.
+6. Motion explains a change. Exits are shorter than enters. Do not animate width or height. `prefers-reduced-motion` disables non-essential motion.
 7. Back navigation returns to the same place. Charts do not use color as the only encoding.
 8. Empty, loading, and error each have their own layout.
 

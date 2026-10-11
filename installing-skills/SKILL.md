@@ -27,6 +27,8 @@ On macOS or Git Bash:
 
 `--update` relinks only IDEs whose installed version differs from the `VERSION` file in this repo.
 
+After the pack is linked, the script recommends bundles from `recommended-skills.tsv` that are not already on the machine, and asks whether to install those into the IDEs just chosen. Enter means yes. `n` skips them. A skill that already has `SKILL.md` in a known skill directory or the Cursor plugin cache is not cloned and not linked again. Do not install a missing bundle unless the user accepts. `--with-recommended` accepts without a prompt. `--no-recommended` skips the question.
+
 On Windows PowerShell, from this repo:
 
 ```powershell

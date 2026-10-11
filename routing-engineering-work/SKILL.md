@@ -18,6 +18,7 @@ Pick one path, then read that skill and follow it before any other work. One pat
 | Idea, doc, or ticket, and the user asked to spec only | `specifying-a-feature` |
 | GO verdict plus a plan, or "implement this spec" | `implementing-from-spec` |
 | "Viết prompt", agent brief, slash command, automation instruction | `prompting-the-loop` |
+| "Thiết kế vòng lặp", design a workflow, what loop should exist | `prompting-the-loop`, then `running-the-loop` after the prompt exists |
 | Recurring loop, triage, CI, PR babysit, "until done" with a budget | `running-the-loop` |
 | Screen, component, layout, color, type, motion, accessibility | `designing-interface` |
 

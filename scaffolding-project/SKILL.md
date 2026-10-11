@@ -18,7 +18,7 @@ Read what exists: git remote, package or build manifests, test scripts, `AGENTS.
 Ask one fork at a time, and only if inspection left it open. Lead with the recommended answer.
 
 - **Issue tracker.** GitHub remote → GitHub issues. No remote → markdown files in `work/`. Record the choice in `docs/agents/issue-tracker.md`.
-- **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `running-the-loop` for `STATE.md`, `LOOP.md`, `loop-budget.md`, and `loop-run-log.md`.
+- **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `running-the-loop`. Write `LOOP.md`, one `STATE.md` per pattern, `loop-budget.md`, `loop-run-log.md`, and `loop-constraints.md` with the denylist and no auto-merge.
 - **UI product.** If the product has screens, follow `designing-interface` far enough to write `design-system/MASTER.md` before feature work.
 
 Domain docs default to one `GLOSSARY.md` and `docs/adr/` at the repo root. Create `GLOSSARY.md` when the first term is settled. Create `docs/adr/0001-title.md` when the first decision must constrain later work. Skip both until that happens.

@@ -2,6 +2,18 @@ MIT License
 
 Copyright (c) 2026 Mạnh Quốc
 
+This license covers the original skill instructions, installer scripts, and
+documentation in this repository.
+
+Methods described here are informed by public projects, including
+claude-code-best-practice, loop-engineering, mattpocock/skills,
+ui-ux-pro-max-skill, GSD Core, and Superpowers. Their source code is not
+included in this repository, and this license does not apply to it.
+
+`scripts/install.sh` and `scripts/install.ps1` may clone third-party skill
+repositories listed in `recommended-skills.tsv`. Those copies stay under the
+licenses of their own repositories.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

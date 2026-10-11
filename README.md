@@ -24,6 +24,13 @@ Enter cài mọi IDE tìm thấy. Hoặc nhập số, ví dụ `1,3`.
 
 `--update` gắn lại chỗ nào đang cài phiên bản khác với file `VERSION`. Phiên bản mới là đổi số trong `VERSION`, rồi chạy `--update`.
 
+Sau khi gắn pack, script liệt kê skill bổ sung trong `recommended-skills.tsv` (Superpowers, `diagnosing-bugs`, `ui-ux-pro-max`) mà máy chưa có, rồi hỏi có tự động cài vào đúng các IDE vừa chọn không. Enter là có. `n` là bỏ qua. Skill đã có `SKILL.md` trong thư mục skill hoặc plugin Cursor thì không clone và không gắn lại.
+
+```bash
+./scripts/install.sh --all --with-recommended
+./scripts/install.sh --all --no-recommended
+```
+
 | Công cụ | Thư mục global | Thư mục trong một project |
 |---------|----------------|---------------------------|
 | Cursor | `~/.cursor/skills` | `.cursor/skills` |
@@ -86,9 +93,34 @@ rm ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineering-w
 Hai cách:
 
 - Gõ `/tên-skill` khi muốn ép đúng nhánh.
-- Nói việc cần làm. Agent tự mở skill có mô tả khớp. `/routing-engineering-work` là cửa vào khi câu nói chưa chỉ rõ nhánh.
+- Nói việc cần làm. Agent tự mở skill có mô tả khớp. Câu chưa chỉ nhánh thì `/routing-engineering-work` chọn một skill rồi làm theo skill đó.
 
-Chat đang mở từ trước lúc cài không thấy skill mới. Mở chat khác.
+Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trước xong. Chat đang mở từ trước lúc cài không thấy skill mới. Mở chat khác.
+
+## Khi nào dùng skill nào
+
+| Bạn đang muốn | Gõ | Xong khi |
+|---------------|-----|----------|
+| Làm xong một chức năng, một bug, hoặc một ý từ đầu đến PR | `/processing-the-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
+| Repo chưa có lệnh test, file harness, chỗ ghi việc | `/scaffolding-project` | Session mới build và test được mà không hỏi lại |
+| Chỉ viết spec và plan, chưa đụng code | `/specifying-a-feature` | Có `GO` hoặc `NO-GO`. Plan chỉ xuất hiện sau `GO` |
+| Plan đã có và đã `GO`, làm đúng một task | `/implementing-from-spec` | Lệnh kiểm của task đó qua một lượt verifier riêng |
+| Viết prompt, agent brief, hoặc lệnh slash cho session khác chạy | `/prompting-the-loop` | File prompt đủ mục, mức mặc định là báo cáo |
+| Nghĩ ra một vòng sẽ chạy lặp lại (triage, CI, PR, changelog) | `/prompting-the-loop`, rồi `/running-the-loop` | Prompt có trước. Vòng tuần đầu chỉ ghi báo cáo |
+| Vòng đã có, chạy một lượt: triage sáng, CI đỏ, PR kẹt, dependency, changelog, dọn sau merge | `/running-the-loop` | `STATE.md` đúng khuôn và code sản phẩm không bị sửa ở mức báo cáo |
+| Đổi nhìn, bấm, chữ, màu, chuyển động, hoặc accessibility của một màn | `/designing-interface` | `MASTER.md` có, và luồng đã bấm thử kể cả trống và lỗi |
+| Chưa rõ câu nói thuộc nhánh nào | `/routing-engineering-work` | Đã chọn một hàng ở trên và làm theo skill đó |
+| Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/installing-skills` | IDE bạn chọn trỏ symlink về repo này |
+
+`/coordinating-agents` là luật nội bộ. Skill đang làm việc tự đọc nó khi chia subagent. Bạn không cần gõ, trừ khi muốn xem ai đang giữ file nào.
+
+Màn hình nằm trong một chức năng thì vẫn gọi `/processing-the-flow`. Skill đó gọi `/designing-interface` lúc chốt thiết kế và lúc kiểm màn hình. Skill giao diện không lấy mất các cổng plan, code, verify.
+
+Bug của một chức năng cũng là `/processing-the-flow`: phải có một lệnh đỏ đúng triệu chứng trước khi đoán nguyên nhân. Vòng bảo trì không sửa bug feature đó.
+
+Sửa một chữ, một import, hoặc một tên chỉ đi tắt trong `/processing-the-flow` khi bạn nói đó là sửa một dòng và nêu đúng chữ cần đổi.
+
+Ý còn sương, chưa nói được kết quả mong đợi, thì `/specifying-a-feature` ghi bản đồ và dừng sau một quyết định. Chưa có plan thì không gọi `/implementing-from-spec`.
 
 ## Làm một việc cho xong
 
@@ -103,7 +135,7 @@ REQ-1 | admin xuất CSV | file có mã đơn và tổng tiền
 REQ-2 | người không phải admin bấm xuất | bị từ chối, không có file
 ```
 
-Bạn thêm hành vi thì nó đánh số lại và hỏi lần nữa. Bạn xác nhận đủ thì nó ghi `CONTEXT.md` và tự đi tiếp, không hỏi "làm tiếp không?".
+Bạn thêm hành vi thì nó đánh số lại và hỏi lần nữa. Bạn xác nhận đủ thì nó đưa 2–3 hướng, một hướng đề xuất, và chờ bạn chọn. Rồi ghi `CONTEXT.md` và tự đi tiếp, không hỏi "làm tiếp không?".
 
 | Cổng | Việc | Sang cổng sau khi |
 |------|------|-------------------|
@@ -135,22 +167,6 @@ work/{slug}/
   VERIFICATION.md
 ```
 
-## Các skill khác
-
-| Việc | Lệnh |
-|------|------|
-| Repo trống, dựng harness | `/scaffolding-project` |
-| Chỉ viết spec, chưa code | `/specifying-a-feature` |
-| Đã có plan, làm một task | `/implementing-from-spec` |
-| Viết prompt cho agent | `/prompting-the-loop` |
-| Vòng bảo trì theo lịch (triage, CI, PR). Tuần đầu chỉ báo cáo | `/running-the-loop` |
-| Giao diện | `/designing-interface` |
-| Chưa rõ nhánh | `/routing-engineering-work` |
-| Giao subagent và theo dõi họ | `/coordinating-agents` |
-| Cài hoặc cập nhật skill vào IDE trên máy | `/installing-skills` |
-
-`/running-the-loop` không thay `/processing-the-flow`. Vòng bảo trì liệt kê việc. Vòng feature hoàn thành một yêu cầu.
-
 ## Nguồn
 
 Quy trình được rút từ các repo công khai, không sao chép mã nguồn:
@@ -166,7 +182,7 @@ Database tìm style của ui-ux-pro-max không nằm trong repo này. Khi skill 
 
 ## Superpowers
 
-Plugin Superpowers trong Cursor là phần cách làm bên trong `/processing-the-flow`. Không cần cài app khác. Skill này tự đọc và làm theo skill Superpowers ở từng cổng:
+Luật cốt lõi nằm trong `coordinating-agents`. Pack vẫn chạy khi Superpowers chưa cài. Khi plugin có trên máy, agent đọc thêm skill đó ở cổng tương ứng:
 
 | Cổng | Skill Superpowers |
 |------|-------------------|
@@ -186,4 +202,4 @@ File trạng thái vẫn nằm trong `work/{slug}/`. Superpowers không thay câ
 
 ## So với skill của Matt Pocock
 
-[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Pack này giữ điều phối subagent, roster, và đối chiếu từng `REQ-`. Những chỗ kia đã được đưa vào `specifying-a-feature`, `implementing-from-spec`, và đường bug của `processing-the-flow`. Ý tưởng còn sương, chưa ghi được kết quả mong đợi, thì dừng để chốt một quyết định, không bịa `REQ-`.
+[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, hai trục Spec và Standards, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Pack này giữ điều phối subagent và đối chiếu từng `REQ-`. Grill hỏi cả nhóm câu được hỏi ngay, không hỏi từng câu một như bản brainstorming dài. Ý tưởng còn sương thì dừng để chốt một quyết định. Prototype là mã vứt đi. Database style của ui-ux-pro-max vẫn là phần cài thêm; checklist ưu tiên của nó nằm trong `designing-interface`.

@@ -36,7 +36,11 @@ Each open decision is its own note under `work/maps/{slug}/` with `## Question` 
 
 Grilling and prototype decisions need the user in the loop. Research can run without them. Record the answer on the decision, gist it in Decisions so far, and graduate any fog that is now a sharp question.
 
+A prototype decision answers one question in throwaway code. Delete it unless the user keeps it. It is not the feature.
+
 If charting shows the whole route is already clear, drop the map and use the open-feature path.
+
+Several independent subsystems are not one spec. Name the pieces, ask which is first, and specify only that piece.
 
 ## Settled — the spec
 
@@ -63,7 +67,7 @@ Create `work/{slug}/REQUEST.md` from the user's idea or source doc: goal, who it
 Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md` with:
 
 - Product value and who is hurt if this ships or does not
-- What the code already does (from reading it)
+- What the code already does, each claim citing a file and a symbol. Do not invent an endpoint or a type.
 - Feasibility, risks, and the approach: build, reuse, or decline
 - A single line: `Verdict: GO` or `Verdict: CONDITIONAL` or `Verdict: NO-GO`
 - The condition, when the verdict is CONDITIONAL
@@ -81,10 +85,12 @@ Then write:
 Each task is one `REQ-` id:
 
 ```markdown
-- [ ] T1 | REQ-1 | files | change | verify command
+- [ ] T1 | REQ-1 | files | failing test, then the change | verify command
 ```
 
-Tasks in one wave must not edit the same file. A task without a verify command is not a task. The plan does not add work `CONTEXT.md` marked out of scope.
+A task is one behavior with its own test cycle. Fold setup into the task that needs it. A setup-only line is not a task. Tasks in one wave must not edit the same file. A task without a verify command is not a task. The plan does not add work `CONTEXT.md` marked out of scope.
+
+Before publishing, reject the spec or plan when it contains a placeholder, a contradiction, a `REQ-` line with no expected result, or a task with no failing test. Fix those in place.
 
 ## Coordination
 
