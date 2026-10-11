@@ -48,6 +48,10 @@ Match one style to the product. Keep icons as SVG with a text name. Put raw hex 
 7. Back navigation returns to the same place. Charts do not use color as the only encoding.
 8. Empty, loading, and error each have their own layout.
 
+## Coordination
+
+Read and follow `coordinating-agents` when more than one page is built. One worker owns `design-system/MASTER.md`. Each other worker owns one page file. The verifier for a page re-checks the checklist and the browser flow. The skill is done only when those rows are `pass`.
+
 ## Done
 
 MASTER.md exists and the screen uses it. The changed flow has been exercised in the browser, including the empty and error states the change can reach. A screenshot alone does not finish the skill.

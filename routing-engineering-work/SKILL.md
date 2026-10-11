@@ -24,3 +24,5 @@ Pick one path, then read that skill and follow it before any other work. One pat
 UI inside a feature: run `designing-interface` during specify (for the design brief) and again during implement (before calling the screen done). The feature skills stay in charge of the gates.
 
 A maintenance loop and a feature are different jobs. Daily triage lists slices. It does not rewrite the repo. A feature the user wants finished goes through `processing-the-flow`. Spec-only and implement-only stay on their own rows.
+
+This skill does not dispatch. The chosen skill reads `coordinating-agents` before it splits work.

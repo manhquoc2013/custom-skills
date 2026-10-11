@@ -17,20 +17,22 @@ Files are the authority. A later session resumes from `FLOW.md`, not from chat m
 
 A one-line fix skips the loop only when the user names it as a typo, import, or rename and names the exact text to change. Then change that text, run the covering test, and stop. Anything else is a feature.
 
-A bug starts with a failing test that reproduces the reported cause. No production edit before that test fails.
+A bug starts as a tight loop. Before any hypothesis or production edit, run one command that goes red on the symptom the user described. Shrink that repro until every remaining step still makes it red. Then read `systematic-debugging`. If `diagnosing-bugs` is available, follow it for the loop.
+
+If a `REQ-` line cannot state an expected result, the work is still fog. Follow the fog path in `specifying-a-feature` and stop after one decision. Do not invent the result.
 
 ## Superpowers
 
-At each gate, read that Superpowers skill and follow it before doing the gate's own work. Say the skill name, then follow it. This pack still decides when a gate is done.
+Read `coordinating-agents` and follow its situation table. The gate table is the order for this skill. Read each named skill and follow it. Naming it is not following it. This pack still decides when a gate is done.
 
 | Gate | Read and follow |
 |------|-----------------|
 | discuss, after the `REQ-` list is confirmed | `brainstorming` — approaches, design, user approval |
 | plan | `writing-plans` |
 | first execute | `using-git-worktrees` |
-| each task | `test-driven-development`, then `requesting-code-review` |
-| tasks in one wave that do not share files | `subagent-driven-development` |
-| tasks that share files | `executing-plans` |
+| each wave | `dispatching-parallel-agents`, then synthesize below |
+| inside each subagent | `test-driven-development` |
+| after implementers return | one `verifier` subagent per task, plus one `watcher` for the wave, in the same response. Follow `requesting-code-review` inside each verifier |
 | any `REJECT`, test failure, or bug | `systematic-debugging` before the next edit |
 | verify, and before any `PASS` or done claim | `verification-before-completion` |
 | ship | `finishing-a-development-branch` |
@@ -60,35 +62,35 @@ none | needs-human | no-go | attempt-cap | done
 
 Rewrite this file at the start and end of every gate. The first write sets `Phase` to `discuss` and `Stop` to `needs-human` until the intake is done.
 
-## Intake
+## Grill
 
-Do this before research, plan, or code. A slot counts only when the user wrote it or confirmed it in this conversation. A guess written by the agent does not count.
+Run this before research, plan, or code. One call keeps asking until nothing is left assumed.
 
-Show the slots the prompt already fills, then ask the empty ones in the same message. Where the repo already has a fact (test command, screen name, design file), offer that fact as the recommended answer and wait for a yes.
+Look up facts yourself: `GLOSSARY.md`, ADRs, code, the test command, screen names. Do not ask the user for a fact you can read. When the code contradicts the user, say so and ask which is right.
 
-Required slots:
+A fuzzy term gets one precise candidate. When it clashes with the glossary, ask which meaning stands. When a term is settled, add it to `GLOSSARY.md` then. A glossary line is a meaning, not an implementation note.
 
-| Slot | The user's answer states |
-|------|--------------------------|
-| Outcome | What is true when this work is finished |
-| Actor | Who performs it |
-| Behavior | The main path, including the input |
-| Failure | The main error, empty, or forbidden case |
-| Out of scope | What this work will not do |
-| Verify | The command, screen action, or example that proves it |
-| Source | A doc or ticket path, or that this prompt is the only source |
+Write an ADR only when the decision is hard to reverse, surprising without this context, and a real trade-off. Otherwise do not write one.
 
-A screen adds two slots: which screen, and which existing visual system to follow, or none. A bug adds two slots: how to reproduce it, and the actual result versus the expected result.
+The frontier is every decision you can ask now without guessing an answer you have not heard. Ask that whole frontier in one round, then wait.
 
-Each distinct behavior the user names is its own requirement. Do not merge two behaviors into one line.
-
-After the slots are filled, show the list and wait:
-
-```markdown
-- REQ-1 | <behavior or failure> | <expected result>
+```text
+Q1. <title>
+<question>
+Recommended: <answer>. Yes accepts this.
 ```
 
-The list is locked when the user says it is complete. Add any behavior they add and show the list again. Then write `work/{slug}/CONTEXT.md` with the slots plus this list. Set `Stop` to `none` and start plan. An empty slot, or an unconfirmed list, keeps `Stop` at `needs-human`.
+The first round includes every item below that the user has not already answered: what is true when this is finished, who does it, the main path and its input, the failure or empty or forbidden case, what this work will not do, how to verify it, and the source doc or that this prompt is the only source. A screen adds which screen and which visual system, or none. A bug adds how to reproduce it and the actual result versus the expected result.
+
+A question that depends on an answer still open in this round waits until the next round. After the user answers, recompute the frontier. A silent assumption is an open decision. Ask it.
+
+When the frontier is empty, show one line per behavior:
+
+```text
+REQ-1 | <behavior or failure> | <expected result>
+```
+
+Wait until the user says the list is complete and the understanding is shared. Then write `work/{slug}/CONTEXT.md` and set `Stop` to `none`. Do not start plan before that sentence. An empty frontier item, or no confirmation, keeps `Stop` at `needs-human`.
 
 ## Gates
 
@@ -96,11 +98,45 @@ The list is locked when the user says it is complete. Add any behavior they add 
 |-------|--------|----------------|
 | discuss | `CONTEXT.md` with every slot and a user-confirmed `REQ-` list. A screen also follows `designing-interface` | The user has confirmed the requirement list is complete |
 | plan | `specifying-a-feature` writes research and `PLAN.md` | Plan check below passes |
-| execute | `implementing-from-spec` for the current task only | Logic check returns `Verdict: PASS` |
+| execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
 | verify | `VERIFICATION.md` | Every `REQ-` id has a command whose result matches the expected result, and Gaps is empty |
 | ship | PR link, or the commit message left in `IMPLEMENT.md` | Verify verdict is PASS |
 
-On `PASS`, set `Attempt` to 0 and start the next task, then the next wave, then verify. On `REJECT`, stay, add 1 to `Attempt`, and fix from the Breaks or Gaps list. At attempt 3, set `Stop` to `attempt-cap`.
+On a wave `PASS`, set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
+
+## Roster
+
+Read and follow `coordinating-agents`. For this skill the worker role is `implementer`. A wave's rows are one implementer per task, one verifier per implementer, and one watcher. Put the `REQ-` id in the task cell. Two implementers do not share a `REQ-` or a file. If they would, split the wave before dispatching.
+
+## Dispatch
+
+Read and follow `dispatching-parallel-agents`. Dispatch every `running` implementer in the wave in one response. Each prompt contains only that row: the quoted `REQ-` line, the owned files, the change, and the verify command, plus the order to follow `test-driven-development` and `implementing-from-spec`. The prompt says the implementer edits owned files only and writes `work/{slug}/agents/{id}.md` with the files it touched and the command output. It does not write the verdict.
+
+When every implementer in the wave has returned, set those rows to `returned`. In the next response, dispatch every verifier for those tasks and the wave watcher together.
+
+The verifier is a new subagent, not a continuation of the implementer. It follows `requesting-code-review` and `verification-before-completion`. It re-runs the verify command, quotes the expected result from the `REQ-` line, and writes `work/{slug}/checks/{task}.md`. A file outside that task's `owns` cell is a `REJECT`.
+
+The watcher reads the roster and every `agents/{id}.md` for the wave. It writes `work/{slug}/waves/{wave}-watch.md`: each file touched, which implementer owned it, and any file touched by two implementers or by an implementer outside its `owns` cell.
+
+## Synthesize
+
+The parent writes `work/{slug}/waves/{wave}.md` only after the watcher and every verifier for that wave have returned.
+
+```markdown
+## Verdict
+PASS or REJECT
+
+## Tasks
+id | role | REQ | owns | status | command | actual output | verdict
+
+## Conflicts
+from the watcher file
+
+## Next
+next wave id, or verify
+```
+
+A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass`, Conflicts is empty, and every actual output matches the quoted `REQ-` result. Then dispatch the next wave, or start verify.
 
 After discuss is locked, work on a feature branch. Unrelated dirty files set `Stop` to `needs-human`.
 
@@ -110,7 +146,7 @@ Reject `PLAN.md` before any execute when a `REQ-` id has no task, a task has no 
 
 ## Logic check
 
-After every task, write `work/{slug}/checks/{task}.md`. The verdict follows the command output.
+The verifier for that task writes `work/{slug}/checks/{task}.md`. The implementer does not. The verdict follows the command output.
 
 ```markdown
 ## Verdict

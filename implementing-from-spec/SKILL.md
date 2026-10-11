@@ -12,11 +12,11 @@ The plan is the scope. A session implements one task, then a separate check deci
 
 ## Load
 
-Read `work/{slug}/CONTEXT.md` when it exists, then the current task in `PLAN.md` or `SPEC.md`. Read `GLOSSARY.md` when it exists. State the task name and its verify command before editing.
+Read `work/{slug}/CONTEXT.md` when it exists, then the current task in `PLAN.md` or `SPEC.md`. Read `GLOSSARY.md` and the ADRs under `docs/adr/` that touch this task. Use those words. State the task name, its seam, and its verify command before editing.
 
 Missing plan: stop and follow `specifying-a-feature`. Missing GO on an open-feature folder: stop. A NO-GO folder stays unbuilt. A plan that fails the plan check in `processing-the-flow` stays unbuilt.
 
-When `processing-the-flow` is the caller, the task's `REQ-` id is the seam. Do not ask again. Otherwise confirm the seams with the user when `SPEC.md` or `eng.md` has none confirmed. Tests are written only at those seams. The assertion's expected value is the expected result on that `REQ-` line.
+When `processing-the-flow` is the caller, the task's `REQ-` id is the seam. Do not ask again. Otherwise confirm the seams with the user when `SPEC.md` or `eng.md` has none confirmed. Tests are written only at those seams. The assertion's expected value is the expected result on that `REQ-` line. A test that calls a private function, or recomputes the expected value the way the code does, is not a seam test. Write one failing test, then the code for that test. Do not write the rest of the tests first.
 
 ## Slice
 
@@ -27,7 +27,7 @@ One public behavior.
 3. Write only the code that makes that test pass.
 4. Run the task's verify command.
 
-Read and follow `test-driven-development` for the slice. Code written before the failing test is deleted and the slice starts again. On a failure, read and follow `systematic-debugging` before editing again. Before calling the task passed, read and follow `verification-before-completion`.
+Read and follow `test-driven-development` for the slice. Code written before the failing test is deleted and the slice starts again. On a bug or a red test, do not hypothesize until one command has gone red on that symptom, then shrink the repro. Read `systematic-debugging`. If `diagnosing-bugs` is available, follow it. Before calling the task passed, read and follow `verification-before-completion`. The check records two lines: Spec, whether the output matches the `REQ-` or the spec, and Standards, whether the diff breaks a rule written in this repo. A standards miss that the repo documents is a `REJECT`.
 
 ## Check
 
@@ -42,6 +42,10 @@ On failure, fix and re-check. After three failed checks on the same task, stop. 
 Append to `work/{slug}/implement/IMPLEMENT.md`: task, seams, commands, pass or fail, and files touched. When this session is allowed to commit, one passing task is one commit. Otherwise write the commit message in that record. Denylist paths (auth, payments, secrets, infra) wait for human merge.
 
 When `processing-the-flow` is the caller, return the verdict and let it start the next task. When this skill is the top-level request, stop after this task.
+
+## Coordination
+
+Read and follow `coordinating-agents`. One worker owns one task's files. The check pass is a verifier row, not the worker marking itself done. Several tasks with disjoint files are one parallel dispatch. The skill is done only when each task row is `pass`.
 
 ## Done
 

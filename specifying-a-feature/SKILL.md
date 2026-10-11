@@ -11,12 +11,14 @@ description: >-
 
 No implementation in this skill. The artifact is a verdict and, only after GO, a plan. Code starts in `implementing-from-spec`.
 
-When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again and do not rewrite its slots. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. The fog path does not apply.
+When this skill is the top-level call, run the Grill section of `processing-the-flow` before research. Do not plan while that frontier is still open.
+
+When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again and do not rewrite its slots. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
 
 ## Pick the shape
 
 - **Fog.** The destination is real and the route is not visible inside one session. Chart a map. Resolve at most one decision this session, then stop.
-- **Settled.** The conversation already chose the behavior. Synthesize the spec. Ask nothing new.
+- **Settled.** The user already answered the decisions. Do not ask those again. Still ask any assumption they did not settle.
 - **Open feature.** An idea or a source doc, one feature, questions still open. Run research, then plan only on GO.
 
 ## Fog — the map
@@ -38,7 +40,7 @@ If charting shows the whole route is already clear, drop the map and use the ope
 
 ## Settled — the spec
 
-Explore the code. Use words from `GLOSSARY.md` when it exists. Prefer an existing public boundary for tests. List the seams, each with what it catches and what it misses, and confirm them with the user before publishing.
+Explore the code. Read `GLOSSARY.md` and the ADRs under `docs/adr/` that touch this area. Use those words. A new term goes into `GLOSSARY.md`. A decision later work must obey goes into `docs/adr/` as the next number. Prefer an existing public boundary for tests. Each seam line says what it catches and what it misses. Implementation decisions name modules and contracts, not file paths. Confirm the seams with the user before publishing.
 
 Write `work/{slug}/plan/SPEC.md`:
 
@@ -83,6 +85,10 @@ Each task is one `REQ-` id:
 ```
 
 Tasks in one wave must not edit the same file. A task without a verify command is not a task. The plan does not add work `CONTEXT.md` marked out of scope.
+
+## Coordination
+
+Read and follow `coordinating-agents` when research is split. One worker owns the code notes, one owns the product notes, and one owns the feasibility notes. The planner starts after they return. The verifier checks that every `REQ-` id has one task and one verify command. The skill is done only when that verifier row is `pass`.
 
 ## Done
 

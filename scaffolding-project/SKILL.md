@@ -21,7 +21,7 @@ Ask one fork at a time, and only if inspection left it open. Lead with the recom
 - **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `running-the-loop` for `STATE.md`, `LOOP.md`, `loop-budget.md`, and `loop-run-log.md`.
 - **UI product.** If the product has screens, follow `designing-interface` far enough to write `design-system/MASTER.md` before feature work.
 
-Domain docs default to one `GLOSSARY.md` and `docs/adr/` at the repo root. Skip the glossary until a domain word has actually appeared.
+Domain docs default to one `GLOSSARY.md` and `docs/adr/` at the repo root. Create `GLOSSARY.md` when the first term is settled. Create `docs/adr/0001-title.md` when the first decision must constrain later work. Skip both until that happens.
 
 ## 3. Write the harness
 
@@ -39,6 +39,10 @@ The file states:
 - Denylist: auth, payments, secrets, infra — human merge
 
 Add `work/README.md` with the pipeline: discuss → plan → execute → verify → ship. A new product also gets `PROJECT.md` (one paragraph and non-goals) and `REQUIREMENTS.md` (ids the later verify step can check). Create `docs/agents/issue-tracker.md` with the tracker choice and the five labels `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix` when the tracker is GitHub and those labels are missing.
+
+## Coordination
+
+Read and follow `coordinating-agents` when more than one file is written. One worker owns each of `AGENTS.md` or `CLAUDE.md`, `docs/agents/issue-tracker.md`, `PROJECT.md`, `REQUIREMENTS.md`, and `design-system/MASTER.md`. The verifier checks that the harness commands match the manifests. The skill is done only when those rows are `pass`.
 
 ## Done
 

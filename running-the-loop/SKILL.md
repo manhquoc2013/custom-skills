@@ -72,6 +72,10 @@ Every run reads `STATE.md` first and deletes lines whose PR or issue is already 
 6. On the third failed attempt, move the item to Waiting on human with the last command output.
 7. Append the run log. Notify only when a human must decide.
 
+## Coordination
+
+Read and follow `coordinating-agents`. The worker that writes `STATE.md` does not verify it. The verifier checks the schema and, at L1, that product code was not edited. An L2 fix is a separate worker whose `owns` cell is that slice. The run is done only when the verifier row is `pass`.
+
 ## Done
 
 `LOOP.md` names the level and the non-goals, `STATE.md` matches the schema, and an L1 loop has not edited product code.

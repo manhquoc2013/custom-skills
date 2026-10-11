@@ -6,42 +6,80 @@ Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư m�
 
 ## Cài đặt
 
-Cần Cursor và một chat Agent mới sau khi cài. Skill gắn bằng symlink, nên sửa file trong repo này là bản Cursor đang đọc.
-
-### Mọi project
-
-Chạy trong thư mục repo này:
+Chạy trong thư mục repo này. Script tìm IDE đang có trên máy, hiện phiên bản đã gắn, rồi hỏi cài vào IDE nào. Symlink trỏ về repo này, nên sửa skill trong repo là bản mọi IDE đang đọc. Mở phiên chat mới rồi gõ `/processing-the-flow`.
 
 ```bash
-mkdir -p ~/.cursor/skills
-for name in routing-engineering-work scaffolding-project specifying-a-feature implementing-from-spec prompting-the-loop running-the-loop processing-the-flow designing-interface; do
-  ln -sfn "$(pwd)/$name" "$HOME/.cursor/skills/$name"
-done
-ls -l ~/.cursor/skills
+chmod +x scripts/install.sh
+./scripts/install.sh --list
+./scripts/install.sh
 ```
 
-Mỗi dòng phải là một symlink trỏ về repo này. Mở một chat Agent mới. Gõ `/processing-the-flow` để kiểm tra lệnh đã xuất hiện.
-
-### Một project
-
-Trong project đó:
+Enter cài mọi IDE tìm thấy. Hoặc nhập số, ví dụ `1,3`.
 
 ```bash
-mkdir -p .cursor/skills
-for name in routing-engineering-work scaffolding-project specifying-a-feature implementing-from-spec prompting-the-loop running-the-loop processing-the-flow designing-interface; do
-  ln -sfn "/Users/tranquoc/Developer/mcp/skills/$name" ".cursor/skills/$name"
-done
+./scripts/install.sh --all
+./scripts/install.sh --update
+./scripts/install.sh --only cursor claude
 ```
 
-Đổi đường dẫn gốc nếu repo skill không nằm ở chỗ đó. Skill trong project được ưu tiên khi bạn đang mở project đó.
+`--update` gắn lại chỗ nào đang cài phiên bản khác với file `VERSION`. Phiên bản mới là đổi số trong `VERSION`, rồi chạy `--update`.
+
+| Công cụ | Thư mục global | Thư mục trong một project |
+|---------|----------------|---------------------------|
+| Cursor | `~/.cursor/skills` | `.cursor/skills` |
+| Claude Code | `~/.claude/skills` | `.claude/skills` |
+| Antigravity | `~/.gemini/antigravity/skills` | cùng thư mục global ở trên |
+| Codex | `~/.codex/skills` | `.agents/skills` |
+| Agent đọc `~/.agents/skills` | `~/.agents/skills` | `.agents/skills` |
+
+```bash
+./scripts/link-skills.sh ~/.claude/skills
+./scripts/link-skills.sh ~/.gemini/antigravity/skills
+./scripts/link-skills.sh ~/.codex/skills
+./scripts/link-skills.sh ~/.agents/skills
+```
+
+Một project thì đổi đích, ví dụ `./scripts/link-skills.sh .claude/skills`.
+
+### Windows
+
+`%USERPROFILE%` là `C:\Users\<tên>`. Trong PowerShell, chạy ở thư mục repo này. Junction không cần quyền Administrator. Cùng cách chọn IDE như trên macOS.
+
+```powershell
+./scripts/install.ps1 --list
+./scripts/install.ps1
+./scripts/install.ps1 --update
+```
+
+| Công cụ | Thư mục global |
+|---------|----------------|
+| Cursor | `%USERPROFILE%\.cursor\skills` |
+| Claude Code | `%USERPROFILE%\.claude\skills` |
+| Antigravity | `%USERPROFILE%\.gemini\antigravity\skills` |
+| Codex | `%USERPROFILE%\.codex\skills` |
+| Agent đọc `.agents\skills` | `%USERPROFILE%\.agents\skills` |
+
+Git Bash trên Windows chạy `./scripts/install.sh` như macOS. Muốn gắn một thư mục tay thì `./scripts/link-skills.sh ~/.cursor/skills`.
+
+### Agent tùy chỉnh
+
+Agent không tự quét thư mục skill thì thêm một dòng vào file hướng dẫn của nó (`AGENTS.md`, system prompt, hoặc file rules):
+
+```markdown
+Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử lý luồng, đọc và làm theo `processing-the-flow/SKILL.md` trong `/Users/tranquoc/Developer/mcp/skills`. Các skill cùng thư mục được file đó nêu tên thì đọc tiếp.
+```
+
+Đổi đường dẫn nếu repo nằm chỗ khác. Định dạng thư mục vẫn là `<tên>/SKILL.md` với `name` và `description` ở đầu file.
 
 ### Gỡ
 
+Xóa symlink trong đúng thư mục đã cài. Không xóa thư mục trong repo này.
+
 ```bash
-rm ~/.cursor/skills/{routing-engineering-work,scaffolding-project,specifying-a-feature,implementing-from-spec,prompting-the-loop,running-the-loop,processing-the-flow,designing-interface}
+rm ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineering-work,scaffolding-project,specifying-a-feature,implementing-from-spec,prompting-the-loop,running-the-loop,processing-the-flow,designing-interface,.engineering-skills-version}
 ```
 
-Lệnh này chỉ xóa symlink, không xóa file trong repo.
+Đổi `~/.cursor/skills` thành thư mục của Claude, Antigravity, hoặc Codex nếu gỡ ở đó.
 
 ## Cách gọi
 
@@ -56,21 +94,9 @@ Chat đang mở từ trước lúc cài không thấy skill mới. Mở chat kh�
 
 Gọi `/processing-the-flow`, rồi dán yêu cầu.
 
-Agent dừng để hỏi trước khi code. Một mục chỉ tính khi bạn viết hoặc xác nhận. Câu đoán của agent không tính.
+Một lệnh là đủ. Agent tự tra fact trong repo. Việc cần bạn quyết thì nó hỏi theo vòng: cả nhóm câu đang hỏi được, mỗi câu có một đáp án đề xuất, `yes` là nhận đáp án đó. Câu phụ thuộc câu chưa trả lời thì để vòng sau. Thuật ngữ vừa chốt được ghi vào `GLOSSARY.md`. ADR chỉ khi quyết định khó đảo, người sau sẽ ngạc nhiên, và có đánh đổi thật.
 
-| Mục | Bạn cần nói |
-|-----|-------------|
-| Outcome | Xong thì điều gì đúng |
-| Actor | Ai thực hiện |
-| Behavior | Đường chính, gồm dữ liệu đầu vào |
-| Failure | Lỗi, rỗng, hoặc bị cấm thì sao |
-| Out of scope | Việc này không làm gì |
-| Verify | Lệnh, thao tác trên màn hình, hoặc ví dụ chứng minh đạt |
-| Source | Đường dẫn tài liệu hoặc ticket, hoặc prompt này là nguồn duy nhất |
-
-Có màn hình thì hỏi thêm màn hình nào và hệ visual sẵn, hoặc không có. Bug thì hỏi cách tái hiện, kết quả thực tế và kết quả đúng.
-
-Mỗi hành vi là một dòng riêng. Agent đưa danh sách rồi chờ bạn nói danh sách đã đủ:
+Nó hỏi đến khi không còn giả định im lặng. Rồi đưa danh sách và chờ bạn nói đã đủ và đã hiểu giống nhau:
 
 ```text
 REQ-1 | admin xuất CSV | file có mã đơn và tổng tiền
@@ -82,7 +108,7 @@ Bạn thêm hành vi thì nó đánh số lại và hỏi lần nữa. Bạn xá
 | Cổng | Việc | Sang cổng sau khi |
 |------|------|-------------------|
 | Plan | Đọc code, ghi `RESEARCH.md` với `GO`, `CONDITIONAL`, hoặc `NO-GO`, rồi `PLAN.md` | Mỗi `REQ-` có đúng một task, task có lệnh kiểm, hai task cùng đợt không sửa một file |
-| Execute | Một task: test đỏ, code tối thiểu, chạy lệnh kiểm | `checks/{task}.md` là `PASS`. Kết quả mong đợi được trích từ dòng `REQ-`, output lệnh được dán vào. Nhánh trong diff mà không có lệnh là `REJECT` |
+| Execute | Phiên chính ghi `roster.md` rồi giao implementer. Mỗi implementer một `REQ-` và một danh sách file riêng. Xong thì giao verifier (đọc lại, không sửa code) và một watcher cho cả wave | Wave `PASS` khi watcher không thấy trùng file và mọi verifier khớp `REQ-`. Rồi tự giao wave kế |
 | Verify | `VERIFICATION.md` | Mọi `REQ-` có output khớp kết quả mong đợi. Test xanh mà thiếu một `REQ-` vẫn là `REJECT` |
 | Ship | Link PR, hoặc câu commit trong `IMPLEMENT.md` | Verify là `PASS` |
 
@@ -100,7 +126,11 @@ work/{slug}/
   CONTEXT.md
   research/RESEARCH.md
   plan/PLAN.md
+  roster.md
+  agents/impl-T1.md
   checks/T1.md
+  waves/1.md
+  waves/1-watch.md
   implement/IMPLEMENT.md
   VERIFICATION.md
 ```
@@ -116,6 +146,8 @@ work/{slug}/
 | Vòng bảo trì theo lịch (triage, CI, PR). Tuần đầu chỉ báo cáo | `/running-the-loop` |
 | Giao diện | `/designing-interface` |
 | Chưa rõ nhánh | `/routing-engineering-work` |
+| Giao subagent và theo dõi họ | `/coordinating-agents` |
+| Cài hoặc cập nhật skill vào IDE trên máy | `/installing-skills` |
 
 `/running-the-loop` không thay `/processing-the-flow`. Vòng bảo trì liệt kê việc. Vòng feature hoàn thành một yêu cầu.
 
@@ -141,11 +173,17 @@ Plugin Superpowers trong Cursor là phần cách làm bên trong `/processing-th
 | Sau khi bạn chốt danh sách `REQ-` | `brainstorming` |
 | Plan | `writing-plans` |
 | Trước khi sửa code | `using-git-worktrees` |
-| Mỗi task | `test-driven-development`, rồi `requesting-code-review` |
-| Task không đụng cùng file | `subagent-driven-development` |
-| Task đụng cùng file | `executing-plans` |
+| Mỗi wave | `dispatching-parallel-agents`: giao hết task trong wave cùng một lượt, rồi phiên chính tổng hợp |
+| Trong từng subagent | `test-driven-development` |
+| Sau khi implementer trả về | Một verifier cho mỗi task, cộng một watcher cho wave. Verifier không sửa code. Watcher chỉ tìm chỗ đụng file |
 | Test đỏ hoặc bug | `systematic-debugging` |
 | Trước khi báo đạt | `verification-before-completion` |
 | Xong việc | `finishing-a-development-branch` |
 
 File trạng thái vẫn nằm trong `work/{slug}/`. Superpowers không thay câu hỏi context và không được báo xong khi còn `REQ-` chưa khớp.
+
+`coordinating-agents` bảo agent đọc skill Superpowers khi tình huống khớp, kể cả skill không nằm trong bảng cổng của `/processing-the-flow`. Đọc và làm theo. Chỉ nêu tên skill là chưa gọi.
+
+## So với skill của Matt Pocock
+
+[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Pack này giữ điều phối subagent, roster, và đối chiếu từng `REQ-`. Những chỗ kia đã được đưa vào `specifying-a-feature`, `implementing-from-spec`, và đường bug của `processing-the-flow`. Ý tưởng còn sương, chưa ghi được kết quả mong đợi, thì dừng để chốt một quyết định, không bịa `REQ-`.

@@ -48,6 +48,10 @@ Match the level to the blast radius. Report and draft prompts stay L1. A prompt 
 
 Write the prompt into the file the user named. When they did not name one, write `prompts/{name}.md` and show the path.
 
+## Coordination
+
+Read and follow `coordinating-agents` when more than one prompt is written. One worker owns one prompt file. The verifier checks that every section has a concrete value and a command. The skill is done only when each prompt row is `pass`.
+
 ## Done
 
 Every section has a concrete value, the done checks are commands or file facts, and the verifier is a different pass from the author of the change.
