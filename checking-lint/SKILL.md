@@ -18,7 +18,7 @@ Look up the lint and typecheck scripts in the repo (`package.json`, `Makefile`, 
 
 Fix only the diagnostics that command printed. Re-run the same command. Quote the last output. Done when that output is clean for the command's own failure rule. A warning the command does not fail on is listed and left, unless the user asked to clear warnings too.
 
-Do not reformat a file the tool did not name. Do not change behavior to silence a diagnostic. If the honest fix changes behavior, stop and put that choice in the question form.
+Do not reformat a file the tool did not name. Do not change behavior to silence a diagnostic. If the honest fix changes behavior, stop and put that choice in the question form. After a fix, re-run the test that covers each file whose logic changed and quote it. A file with no such test is named, not treated as clean.
 
 ## Logic on the same scope
 

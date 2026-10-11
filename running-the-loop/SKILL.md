@@ -92,7 +92,7 @@ Exit immediately when the kill switch is paused or the daily cap is spent. At ab
 3. Apply the pattern rule below.
 4. At L1, stop after the state write. The human gets a brief: what was found, why it matters, and a link. Not the raw log.
 5. At L2, take one High priority item into a worktree. Follow `implementing-from-spec` for that slice only.
-6. A new verifier pass runs the project tests and rejects on failure, a disabled test, a flake treated as a code change, a denylist path, or more than 10 files. The implementer does not grade itself. If tests cannot be run, escalate.
+6. A new verifier pass runs the project tests and the brief's command for behavior this slice must leave unchanged. It rejects on failure, a disabled test, a flake treated as a code change, a denylist path, more than 10 files, a behavior the brief marked out of scope, or a prior result the command no longer matches. The implementer does not grade itself. If tests cannot be run, escalate.
 7. On the third failed attempt, move the item to Waiting on human with the last command output.
 8. Append the run log. Notify only when a human must decide.
 

@@ -28,6 +28,6 @@ After they pick one candidate:
 
 1. Add or keep a test at the public seam that already passes. Do not assert a private helper.
 2. Change only that structure. No new behavior, no drive-by format, no new dependency.
-3. Re-run the same test command. Quote both outputs. A new failure rolls the edit back.
+3. Re-run the same test command. Quote both outputs. A new failure rolls the edit back. An edit that changes an assertion, or a result the first output already showed, is a new behavior. Roll it back.
 
 The pass is done when the second output matches the first, apart from timing. Three failed attempts on the same candidate stop.

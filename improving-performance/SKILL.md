@@ -20,6 +20,6 @@ Run that measurement once and record the number, the command, and the input size
 
 Change only the path the measurement exercises. Prefer a smaller working set or one less round trip that the baseline shows. Do not add a cache, an index, or a new dependency for a cost the baseline did not show.
 
-Re-run the same command on the same input. Quote both numbers in `work/perf/RESULT.md`. Keep the change only when the new number is lower and the repo's test command is still green. A faster number with a red test is rolled back.
+Re-run the same command on the same input. Quote both numbers, and the path's functional result before and after, in `work/perf/RESULT.md`. Keep the change only when the new number is lower, that result is unchanged, and the repo's test command is still green. A faster number with a different result, or a red test, is rolled back.
 
 Three changes that do not beat the baseline stop. Report the three numbers and leave the code at the baseline.

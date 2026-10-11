@@ -146,8 +146,8 @@ Bạn thêm hành vi thì nó đánh số lại và hỏi lần nữa. Bạn xá
 | Cổng | Việc | Sang cổng sau khi |
 |------|------|-------------------|
 | Plan | Đọc code, ghi `RESEARCH.md` với `GO`, `CONDITIONAL`, hoặc `NO-GO`, rồi `PLAN.md` | Mỗi `REQ-` có đúng một task, task có lệnh kiểm, hai task cùng đợt không sửa một file |
-| Execute | Phiên chính ghi `roster.md` rồi giao implementer. Mỗi implementer một `REQ-` và một danh sách file riêng. Xong thì giao verifier (đọc lại, không sửa code) và một watcher cho cả wave | Wave `PASS` khi watcher không thấy trùng file và mọi verifier khớp `REQ-`. Rồi tự giao wave kế |
-| Verify | `VERIFICATION.md` | Mọi `REQ-` có output khớp kết quả mong đợi. Test xanh mà thiếu một `REQ-` vẫn là `REJECT` |
+| Execute | Phiên chính ghi `roster.md` rồi giao implementer. Mỗi prompt một `REQ-`, file riêng, lệnh Kept, và chữ ký produces. Xong thì giao verifier và một watcher cho cả wave | Wave `PASS` khi không trùng file, output khớp `REQ-`, và output Kept khớp kết quả trước đó |
+| Verify | `VERIFICATION.md` | Mọi `REQ-` khớp kết quả mong đợi, mọi hành vi cũ mà diff chạm tới vẫn khớp kết quả trước đó. Test xanh không thay cho hàng đó. Hành vi không có trong spec là `REJECT` |
 | Ship | Link PR, hoặc câu commit trong `IMPLEMENT.md` | Verify là `PASS` |
 
 Ba lần `REJECT` trên cùng một task thì dừng, `Stop: attempt-cap`. Research `NO-GO`, đụng auth, payment, secret, hoặc repo bẩn bởi việc khác thì dừng, `Stop: needs-human`.

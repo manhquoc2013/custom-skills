@@ -20,7 +20,7 @@ Also list `git log <fixed-point>..HEAD --oneline`.
 
 Dispatch both readers in one response. Each reader gets the diff command and the commit list, not this chat's history. Do not merge their findings into one ranked list.
 
-**Spec.** What the change was asked to do: the `REQ-` lines, the issue named in the commits, or a spec path the user gave. Report missing or partial behavior, behavior nobody asked for, and behavior that looks present but wrong. Quote the spec line. No spec: this axis says `no spec` and stops.
+**Spec.** What the change was asked to do: the `REQ-` lines, the issue named in the commits, or a spec path the user gave. Report missing or partial behavior, behavior nobody asked for, and behavior that looks present but wrong. Quote the spec line. A public behavior the diff can change, and that the spec does not name, is a finding. Name the command that locks the old result, or `no command`. No spec: this axis says `no spec` and stops.
 
 **Standards.** Rules written in this repo (`AGENTS.md`, `CONTRIBUTING.md`, a standards file). A written rule can reject. On top of that, a judgement note only: a name that hides the job, the same logic twice in the diff, a string standing in for a domain value, or an abstraction the spec does not need. A written repo rule wins over that note. Skip anything the linter or typechecker already reports.
 

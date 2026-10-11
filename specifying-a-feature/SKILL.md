@@ -13,7 +13,7 @@ No implementation in this skill. The artifact is a verdict and, only after GO, a
 
 When this skill is the top-level call, run the Grill section of `processing-the-flow` before research. Do not plan while that frontier is still open. Any other question follows the Questions section of `coordinating-agents`.
 
-When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again and do not rewrite its slots. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
+When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again. Do not rewrite Requirements, Failure, or Out of scope. Append a Kept row only when research has run the command and quoted the output. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
 
 ## Pick the shape
 
@@ -64,17 +64,27 @@ User stories are numbered: As a <actor>, I want <feature>, so that <benefit>. Im
 
 Create `work/{slug}/REQUEST.md` from the user's idea or source doc: goal, who it is for, constraints, and the source links.
 
-Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md` with:
+Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md`:
 
-- Product value and who is hurt if this ships or does not
-- What the code already does, each claim citing a file and a symbol. Do not invent an endpoint or a type.
-- Feasibility, risks, and the approach: build, reuse, or decline
-- A single line: `Verdict: GO` or `Verdict: CONDITIONAL` or `Verdict: NO-GO`
-- The condition, when the verdict is CONDITIONAL
+```markdown
+## Value
+who is hurt if this ships or does not
+## Already
+file | symbol | behavior
+## Touches
+behavior not in Requirements that this approach can change | file | symbol
+## Approach
+build, reuse, or decline
+## Verdict
+GO | CONDITIONAL | NO-GO
+## Condition
+```
+
+Every Already or Touches claim cites a file and a symbol. Do not invent an endpoint or a type. A Touches row with no citation is rejected. Do not change frozen Requirements, Failure, or Out of scope. When a Touches behavior is missing from Kept, append that Kept row only after its command has been run and the output quoted. No such command: set `Stop` to `needs-human`. Do not add a `REQ-`.
 
 Stop on NO-GO. State the reason and the smallest change that would reopen it.
 
-On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md`: choices already made, error behavior, and out of scope. A screen also follows `designing-interface` and writes `plan/ux.md`.
+On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md` with every heading from the CONTEXT template in `processing-the-flow`. A screen also follows `designing-interface` and writes `plan/ux.md`.
 
 Then write:
 
@@ -85,16 +95,23 @@ Then write:
 Each task is one `REQ-` id:
 
 ```markdown
-- [ ] T1 | REQ-1 | files | failing test, then the change | verify command
+# PLAN
+## Goal
+quoted from CONTEXT
+## Frozen
+Requirements, Failure, Out of scope, and Kept, copied
+## Waves
+### Wave 1
+- [ ] T1 | REQ-1 | files | kept: command => prior result, or none | produces: signature or none | failing test, then the change | verify: command
 ```
 
-A task is one behavior with its own test cycle. Fold setup into the task that needs it. A setup-only line is not a task. Tasks in one wave must not edit the same file. A task without a verify command is not a task. The plan does not add work `CONTEXT.md` marked out of scope.
+A task is one behavior with its own test cycle. Fold setup into the task that needs it. A setup-only line is not a task. Tasks in one wave must not edit the same file. A task without a verify command is not a task. A task whose files already exist names the command that locks each public behavior this diff can change. `none` is allowed only when that seam has no public behavior yet. The plan does not add work `CONTEXT.md` marked out of scope.
 
-Before publishing, reject the spec or plan when it contains a placeholder, a contradiction, a `REQ-` line with no expected result, or a task with no failing test. Fix those in place.
+Before publishing, reject the spec or plan when it contains a placeholder, a contradiction, a `REQ-` line with no expected result, a task with no failing test, a task with no produces line, or a later task that consumes a name no earlier task produces. Fix those in place. A task in a wave does not depend on another task in that same wave.
 
 ## Coordination
 
-Read and follow `coordinating-agents` when research is split. One worker owns the code notes, one owns the product notes, and one owns the feasibility notes. The planner starts after they return. The verifier checks that every `REQ-` id has one task and one verify command. The skill is done only when that verifier row is `pass`.
+Read and follow `coordinating-agents` when research is split. One worker owns the code notes, one owns the product notes, and one owns the feasibility notes. The planner starts after they return. The verifier checks that every `REQ-` id has one task, one kept command or `none`, and one verify command. The skill is done only when that verifier row is `pass`.
 
 ## Done
 

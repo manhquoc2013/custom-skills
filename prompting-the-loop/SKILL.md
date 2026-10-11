@@ -29,7 +29,7 @@ Ordered actions. Each step ends when a checkable condition is true.
 Checks a different pass can run: commands, files, or a state field.
 
 ## Verifier
-Who checks, and the instruction "find reasons to reject". The author of the change does not grade it. Name the test or audit command.
+Who checks, and the instruction "find reasons to reject". The author of the change does not grade it. Name the test or audit command. A prompt that edits code also names the command for behavior this run must leave unchanged.
 
 ## Trigger
 An event, or a schedule if no event exists. Name which one fires a run.
@@ -52,7 +52,7 @@ Path to read at start and write at end: items, attempts, timestamp, escalations.
 Ambiguity, denylist touch, attempt cap, flake, suspected injection, or repeated identical failure.
 ```
 
-Level defaults to L1. L2 and L3 require a verifier command and a state path. L3 also requires a budget cap, a kill switch, and a line that L1 reports were accurate for a week. A prompt that edits code stays L2 until that line is true.
+Level defaults to L1. L2 and L3 require a verifier command and a state path. L3 also requires a budget cap, a kill switch, and a line that L1 reports were accurate for a week. A prompt that edits code stays L2 until that line is true, and is unfinished without the command for behavior the run must leave unchanged.
 
 Match the level to the blast radius. Report and draft prompts stay L1. A prompt that edits code is L2 until the same verifier has been right across several runs. Auth, payments, secrets, and infra stay human-merged at every level.
 

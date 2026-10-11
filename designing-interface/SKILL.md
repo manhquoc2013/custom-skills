@@ -54,4 +54,4 @@ Read and follow `coordinating-agents` when more than one page is built. One work
 
 ## Done
 
-MASTER.md exists and the screen uses it. The changed flow has been exercised in the browser, including the empty and error states the change can reach. A screenshot alone does not finish the skill.
+MASTER.md exists and the screen uses it. The changed flow has been exercised in the browser, including the empty and error states the change can reach. A shared component change also exercises one existing screen that already uses it, including the empty and error states that screen already had. A screenshot alone does not finish the skill.

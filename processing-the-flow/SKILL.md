@@ -67,6 +67,7 @@ Read `work/{slug}/FLOW.md` before any edit. Create it when missing.
 discuss | plan | execute | verify | ship | done
 ## Wave
 ## Task
+## Base
 ## Attempt
 0
 ## Last verdict
@@ -75,6 +76,8 @@ NONE | PASS | REJECT
 none | needs-human | no-go | attempt-cap | done
 ## Note
 ```
+
+At the start of the first execute, before any edit, set `Base` to `git rev-parse HEAD`. A Kept prior result is the kept command's output at that revision. An output taken after the edit is not a prior result. If that command's output no longer matches the quote in `PLAN.md`, set `Stop` to `needs-human`.
 
 Rewrite this file at the start and end of every gate. The first write sets `Phase` to `discuss` and `Stop` to `needs-human` until the intake is done.
 
@@ -104,17 +107,37 @@ When the request is several independent subsystems, stop. Name the pieces, ask w
 
 Wait until the user says the list is complete and the understanding is shared. Then follow the design floor: write 2–3 approaches, the recommendation, and the accepted design into `work/{slug}/CONTEXT.md`. A one-behavior change still gets a few sentences and a yes. Set `Stop` to `none` only after that yes. Do not start plan before it. An empty frontier item, a missing approach choice, or no confirmation keeps `Stop` at `needs-human`.
 
+```markdown
+# CONTEXT
+## Goal
+## Actor
+## Requirements
+REQ-1 | behavior | expected result
+## Approach
+the accepted approach. Other approaches, one line each
+## Failure
+empty, error, or forbidden
+## Out of scope
+## Kept
+public behavior this work can change that is not a REQ | prior result | command
+## Verify
+## Source
+doc path, or this prompt
+```
+
+Every heading is filled before plan. `Kept` is `none` only when this work creates the seam. After the user accepts the approach, Requirements, Failure, Out of scope, and Kept are frozen. Plan and research do not change those four. A new `REQ-` or a smaller Out of scope sets `Stop` to `needs-human`.
+
 ## Gates
 
 | Phase | Write | Advance when |
 |-------|--------|----------------|
-| discuss | `CONTEXT.md` with every slot, a user-confirmed `REQ-` list, and the accepted approach. A screen also follows `designing-interface` | The user has confirmed the requirement list and accepted one approach |
+| discuss | `CONTEXT.md` with every heading filled, a user-confirmed `REQ-` list, and the accepted approach. A screen also follows `designing-interface` | The user has confirmed the requirement list and accepted one approach |
 | plan | `specifying-a-feature` writes research and `PLAN.md` | Plan check below passes |
 | execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
-| verify | `VERIFICATION.md` | Every `REQ-` id has a command whose result matches the expected result, and Gaps is empty |
-| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the suite command was run in this turn |
+| verify | `VERIFICATION.md` | Every `REQ-` id matches, every Kept row matches its prior result, and Gaps and Outside are empty |
+| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the suite command was run in this turn. The suite does not fill a Kept row |
 
-On a wave `PASS`, set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
+On a wave `PASS`, the parent commits each passing task, or writes its commit message in `IMPLEMENT.md` when this session cannot commit. Set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
 
 ## Roster
 
@@ -122,11 +145,13 @@ Read and follow `coordinating-agents`. For this skill the worker role is `implem
 
 ## Dispatch
 
-Read and follow `dispatching-parallel-agents`. Dispatch every `running` implementer in the wave in one response. Each prompt contains only that row: the quoted `REQ-` line, the owned files, the change, and the verify command, plus the order to follow `test-driven-development` and `implementing-from-spec`. The prompt says the implementer edits owned files only and writes `work/{slug}/agents/{id}.md` with the files it touched and the command output. It does not write the verdict.
+Read and follow `dispatching-parallel-agents`. Dispatch every `running` implementer in the wave in one response. Each prompt contains only that row: the quoted `REQ-` line, the owned files, the kept command and its quoted prior result, the produces line, the change, and the verify command, plus the order to follow `test-driven-development` and `implementing-from-spec`. It does not paste `CONTEXT.md` or any other task. The prompt says the implementer edits owned files only and writes `work/{slug}/agents/{id}.md` with the Report sections of `implementing-from-spec`. It does not write the verdict, and it does not commit.
 
-When every implementer in the wave has returned, set those rows to `returned`. In the next response, dispatch every verifier for those tasks and the wave watcher together.
+Read each report before dispatching a verifier. `BLOCKED` or `NEEDS_CONTEXT` sets `Stop` to `needs-human` and does not add to `Attempt`. A concern that names a wrong result or a behavior outside the row is the same stop. A concern that only names a large file still goes to the verifier. `DONE` with an empty RED is a `REJECT`: add 1 to `Attempt` and re-dispatch that task. The re-dispatch prompt quotes `Breaks` and the failed output from `checks/{task}.md` when that file exists. It does not include the previous implementer's reasoning.
 
-The verifier is a new subagent, not a continuation of the implementer. It follows `requesting-code-review` and `verification-before-completion`. It re-runs the verify command, quotes the expected result from the `REQ-` line, and writes `work/{slug}/checks/{task}.md`. A file outside that task's `owns` cell is a `REJECT`.
+When every remaining report is `DONE` with a RED section, set those rows to `returned`. In the next response, dispatch every verifier for those tasks and the wave watcher together.
+
+The verifier is a new subagent, not a continuation of the implementer. It follows `requesting-code-review` and `verification-before-completion`. It re-runs the verify command and each kept command, quotes the expected result from the `REQ-` line and the prior result for each Kept row, and writes `work/{slug}/checks/{task}.md` with the Logic check sections. A file outside that task's `owns` cell is a `REJECT`.
 
 The watcher reads the roster and every `agents/{id}.md` for the wave. It writes `work/{slug}/waves/{wave}-watch.md`: each file touched, which implementer owned it, and any file touched by two implementers or by an implementer outside its `owns` cell.
 
@@ -139,7 +164,7 @@ The parent writes `work/{slug}/waves/{wave}.md` only after the watcher and every
 PASS or REJECT
 
 ## Tasks
-id | role | REQ | owns | status | command | actual output | verdict
+id | role | REQ | owns | status | req output | kept output | verdict
 
 ## Conflicts
 from the watcher file
@@ -148,13 +173,13 @@ from the watcher file
 next wave id, or verify
 ```
 
-A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass`, Conflicts is empty, and every actual output matches the quoted `REQ-` result. Then dispatch the next wave, or start verify.
+A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass`, Conflicts is empty, every actual output matches the quoted `REQ-` result, and every Kept output matches its quoted prior result. Then dispatch the next wave, or start verify.
 
 After discuss is locked, work on a feature branch. Unrelated dirty files set `Stop` to `needs-human`.
 
 ## Plan check
 
-Reject `PLAN.md` before any execute when a `REQ-` id has no task, a task has no `REQ-` id or no verify command, two tasks in one wave edit the same file, a task covers more than one requirement, or the plan adds work `CONTEXT.md` marked out of scope.
+Reject `PLAN.md` before any execute when a `REQ-` id has no task, a task has no `REQ-` id, no kept command, no produces line, or no verify command, two tasks in one wave edit the same file, a task covers more than one requirement, the plan adds work `CONTEXT.md` marked out of scope, or the plan changes a frozen Requirements, Failure, Out of scope, or Kept line. `none` is a kept command only when that seam has no public behavior yet. Also reject a placeholder (`TBD`, `TODO`, "similar to task N", "handle edge cases"), a task that consumes a name no earlier task produces, a same-wave dependency, or a kept prior result that was not the output of that command in this plan turn. A kept command of `none` while `RESEARCH.md` names a public behavior on those files is a reject.
 
 ## Logic check
 
@@ -170,11 +195,17 @@ Each conditional, error path, and empty state this task touched.
 ## Evidence
 For each branch: input, expected result quoted from that `REQ-` line, command, and the command's actual output.
 
+## Kept
+Each public behavior this diff can change that is not this task's `REQ-` line. Quote the result a command showed before this task. Command. Actual output. `none` only when every owned file is new.
+
+## Outside
+A hunk whose behavior is neither the quoted `REQ-` result nor a Kept row. Empty when there is none.
+
 ## Breaks
 A conditional in the task diff that is absent from Branches, a branch with no command, or an actual output that disagrees with the quoted expected result.
 ```
 
-`REJECT` when Breaks is non-empty, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. The verdict is `PASS` only when Breaks is empty.
+`REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. The verdict is `PASS` only when Breaks is empty, Outside is empty, and every Kept output matches. A green suite does not fill a Kept row.
 
 ## Verify
 
@@ -185,11 +216,17 @@ PASS or REJECT
 ## Requirements
 REQ-id | expected result quoted from CONTEXT.md | command | actual output
 
+## Kept
+behavior | prior result | command | actual output
+
+## Outside
+A behavior in the branch diff that is not a Requirements row and not a Kept row. Empty when there is none.
+
 ## Gaps
-Any REQ-id with no row, or an actual output that disagrees with the quoted expected result.
+Any REQ-id with no row, a Kept behavior of a touched module with no row, or an actual output that disagrees with the quoted expected or prior result.
 ```
 
-A green suite with a gap is `REJECT`. `PASS` only when every `REQ-` id has a matching actual output and Gaps is empty.
+A green suite with a gap is `REJECT`. `PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite does not fill a Kept row.
 
 ## Stop
 
