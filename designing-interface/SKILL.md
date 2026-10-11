@@ -13,7 +13,7 @@ Decide the product's visual system before styling a page. Record it in `design-s
 
 If a `ui-ux-pro-max` search script is installed, query it with one intent of 2–5 words. Use `--design-system` for a new product or page, `--domain` for one concern, `--stack` for the framework detected from the manifest. Persist with `--output-dir` at the repo root. When the script is absent, write MASTER from the checks below and say the brief is checklist-derived.
 
-Detect the stack from the manifest. Ask when it is ambiguous. A dashboard wants dense spacing. A marketing page wants sparse spacing. Pick one.
+Detect the stack from the manifest. When it is ambiguous, ask with the Questions section of `coordinating-agents`. A dashboard wants dense spacing. A marketing page wants sparse spacing. Pick one.
 
 ## MASTER.md
 

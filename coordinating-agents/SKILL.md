@@ -10,19 +10,41 @@ description: >-
 
 The parent session is the coordinator. It may do a one-part job itself. Splitting work or dispatching a subagent uses this skill.
 
+## Questions
+
+Every skill in this pack uses this when it asks the user something.
+
+Each question lists every real proposal, one letter each, in the user's language. A is the recommended proposal and the label ends with `(Recommended)`. The next proposals are B, C, D, E, F, and so on for as many proposals as there are. The last choice is always `Người dùng quyết định`.
+
+Every question that can be asked now goes in one form. The user answers all of them, then submits once. On Cursor, one `AskQuestion` call carries that whole form. Do not call it once per question, and do not send the next question after a single answer. Without that tool, print every question in one message and wait for one reply that answers all of them.
+
+```text
+Q1. <title>
+A. <recommended proposal> (Recommended)
+B. <proposal>
+C. <proposal>
+Người dùng quyết định
+```
+
+A paragraph, or a reply of "Yes", is not a question. When they pick the last choice, the text they submit with that choice is the answer. A question that depends on an answer in this form waits until after they submit.
+
 ## Floor
 
 These rules apply when the row matches. A missing plugin does not skip them. If the named skill is installed, read it and follow it too. Its extra steps do not replace this floor.
 
 | Situation | Floor | Also follow if installed |
 |-----------|--------|--------------------------|
-| Behavior is not approved yet | Look at the repo first. Several independent subsystems: name the pieces and take the first. Offer 2–3 approaches, one recommendation, then a design the user accepts. No code before that yes. A short design still needs a yes. | `brainstorming` |
+| Behavior is not approved yet | Discover MCP `codegraph_explore` and call it. It may be absent from the normal tool list. Grep does not replace it. Then ask. Several independent subsystems: name the pieces and take the first. Offer 2–3 approaches, one recommendation, then a design the user accepts. No code before that yes. A short design still needs a yes. | `brainstorming` |
 | Multi-step work has no plan yet | One task is one behavior, its failing test, and its verify command. No setup-only task. Files in one wave do not overlap. | `writing-plans` |
 | About to edit the tree for a feature | Do not edit the default branch. Stay in the current isolated checkout when you are already in one. Otherwise use a feature branch or worktree. Unrelated dirty files stop the work. | `using-git-worktrees` |
 | About to write production code | Watch a test fail on the new behavior, then write the code. Code written first is deleted. Refactor only after that test is green, as its own pass. | `test-driven-development` |
 | Bug, red test, or no command yet that fails on the symptom | Redact secrets. No hypothesis until one command is red on the user's symptom and every remaining step is load-bearing. Then write 3 falsifiable hypotheses. Change one variable at a time. Remove debug tags before done. Re-run the original repro. | `systematic-debugging`, and `diagnosing-bugs` when it is installed |
 | Two or more workers with disjoint files | Dispatch them in one response. | `dispatching-parallel-agents` |
 | A worker just returned | The verifier looks for reasons to reject. Spec and Standards stay separate lines. A documented standards miss rejects. A smell the repo's own standard allows is a note, not a reject. | `requesting-code-review` |
+| User asks to review a diff, PR, or branch | Read-only. Two axes, Spec and Standards, in one dispatch. Do not edit in that pass. | `reviewing-code`, and `requesting-code-review` when it is installed |
+| User asks to refactor without a behavior change | Tests are green first. One candidate, then the same test command again. | `refactoring-code` |
+| User asks to lint, typecheck, or clear tool warnings | Run the repo's own command. Fix only the lines it printed. | `checking-lint` |
+| User asks to make a path faster | Record one measurement, change that path once, measure the same command again. | `improving-performance` |
 | About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. | `verification-before-completion` |
 | Branch is ready to merge or open a PR | The suite is green in this turn. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
 

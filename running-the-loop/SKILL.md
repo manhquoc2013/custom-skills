@@ -9,7 +9,7 @@ description: >-
 
 # Running the loop
 
-A loop replaces the human as the prompter. It discovers work, assigns it, checks the result, and writes state. Week one reports. It does not merge.
+A loop replaces the human as the prompter. It discovers work, assigns it, checks the result, and writes state. Week one reports. It does not merge. A question to the user follows the Questions section of `coordinating-agents`.
 
 A loop is a recurring trigger plus state. A feature finished in this session is `processing-the-flow`, not this skill.
 

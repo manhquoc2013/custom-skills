@@ -2,18 +2,15 @@
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-version="$(tr -d '[:space:]' < "$root/VERSION")"
 linker="$root/scripts/link-skills.sh"
 manifest="$root/recommended-skills.tsv"
+agents_file="$root/scripts/agents.tsv"
 cache_root="${HOME}/.cache/engineering-skills"
-
-ids=(cursor claude antigravity codex agents)
-labels=("Cursor" "Claude Code" "Antigravity" "Codex" "Agents")
-rels=(".cursor/skills" ".claude/skills" ".gemini/antigravity/skills" ".codex/skills" ".agents/skills")
 
 mode=""
 with_recommended=0
 no_recommended=0
+do_pull=0
 only_names=()
 
 while [[ $# -gt 0 ]]; do
@@ -21,6 +18,7 @@ while [[ $# -gt 0 ]]; do
     --list|--all|--update) mode="$1" ;;
     --with-recommended) with_recommended=1 ;;
     --no-recommended) no_recommended=1 ;;
+    --pull) do_pull=1 ;;
     --only)
       mode="--only"
       shift
@@ -28,34 +26,48 @@ while [[ $# -gt 0 ]]; do
       break
       ;;
     *)
-      echo "usage: scripts/install.sh [--list | --all | --update | --only cursor claude ...] [--with-recommended | --no-recommended]" >&2
+      echo "usage: scripts/install.sh [--pull] [--list | --all | --update | --only cursor claude-code ...] [--with-recommended | --no-recommended]" >&2
       exit 1
       ;;
   esac
   shift
 done
 
-present() {
-  case "$1" in
-    cursor)
-      [[ -d "$HOME/.cursor" || -d "/Applications/Cursor.app" ]] || command -v cursor >/dev/null 2>&1
-      ;;
-    claude)
-      [[ -d "$HOME/.claude" ]] || command -v claude >/dev/null 2>&1
-      ;;
-    antigravity)
-      [[ -d "$HOME/.gemini/antigravity" || -d "$HOME/.antigravity" ]] || command -v agy >/dev/null 2>&1
-      ;;
-    codex)
-      [[ -d "$HOME/.codex" ]] || command -v codex >/dev/null 2>&1
-      ;;
-    agents)
-      [[ -d "$HOME/.agents" ]]
-      ;;
-    *)
-      return 1
-      ;;
-  esac
+if [[ "$do_pull" -eq 1 ]]; then
+  if [[ -d "$root/.git" ]]; then
+    git -C "$root" pull --ff-only
+  else
+    echo "Không phải git repo, bỏ qua pull." >&2
+  fi
+fi
+
+version="$(tr -d '[:space:]' < "$root/VERSION")"
+
+ids=()
+labels=()
+detects=()
+rels=()
+while IFS='|' read -r id label detect dests; do
+  [[ -z "${id:-}" || "$id" == \#* ]] && continue
+  ids+=("$id")
+  labels+=("$label")
+  detects+=("$detect")
+  rels+=("$dests")
+done < "$agents_file"
+
+agent_present() {
+  local spec="$1" token
+  local IFS=','
+  local -a tokens=()
+  read -r -a tokens <<< "$spec"
+  for token in "${tokens[@]}"; do
+    case "$token" in
+      bin:*) command -v "${token#bin:}" >/dev/null 2>&1 && return 0 ;;
+      app:*) [[ -e "${token#app:}" ]] && return 0 ;;
+      *) [[ -d "$HOME/$token" ]] && return 0 ;;
+    esac
+  done
+  return 1
 }
 
 installed_version() {
@@ -88,11 +100,34 @@ install_one() {
   printf '%s\n' "$version" > "$dest/.engineering-skills-version"
 }
 
+install_agent() {
+  local idx="$1" dest
+  local IFS=','
+  local -a dests=()
+  read -r -a dests <<< "${rels[$idx]}"
+  for dest in "${dests[@]}"; do
+    install_one "$dest"
+  done
+}
+
+agent_dests() {
+  local idx="$1"
+  local IFS=','
+  local -a dests=()
+  read -r -a dests <<< "${rels[$idx]}"
+  printf '%s\n' "${dests[@]}"
+}
+
 skill_present() {
-  local name="$1" rel hit
+  local name="$1" group rel hit
   local IFS=$' \t\n'
-  for rel in "${rels[@]}"; do
-    [[ -f "$HOME/$rel/$name/SKILL.md" ]] && return 0
+  for group in "${rels[@]}"; do
+    local IFS=','
+    local -a parts=()
+    read -r -a parts <<< "$group"
+    for rel in "${parts[@]}"; do
+      [[ -f "$HOME/$rel/$name/SKILL.md" ]] && return 0
+    done
   done
   if [[ -d "$HOME/.cursor/plugins" ]]; then
     hit="$(find "$HOME/.cursor/plugins" -path "*/${name}/SKILL.md" -print 2>/dev/null | head -n 1 || true)"
@@ -138,6 +173,24 @@ sync_bundle() {
   fi
 }
 
+copy_tree() {
+  local src="$1" target="$2"
+  if [[ -L "$target" ]]; then
+    rm "$target"
+  elif [[ -d "$target" ]]; then
+    rm -rf "$target"
+  elif [[ -e "$target" ]]; then
+    echo "Giữ $target vì không phải thư mục skill."
+    return 0
+  fi
+  mkdir -p "$target"
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a "$src/" "$target/"
+  else
+    cp -R "$src"/. "$target"/
+  fi
+}
+
 link_bundle_into() {
   local cache="$1" paths="$2"
   shift 2
@@ -157,12 +210,8 @@ link_bundle_into() {
     fi
     for dest in "$@"; do
       target="$HOME/$dest/$name"
-      if [[ -e "$target" && ! -L "$target" ]]; then
-        echo "Giữ $target vì thư mục này không phải symlink."
-        continue
-      fi
-      ln -sfn "$src" "$target"
-      echo "linked $name into $HOME/$dest"
+      copy_tree "$src" "$target"
+      echo "installed $name into $HOME/$dest"
     done
   done
 }
@@ -228,30 +277,33 @@ refresh_accepted() {
 
 found=()
 for i in "${!ids[@]}"; do
-  if present "${ids[$i]}"; then
+  if agent_present "${detects[$i]}"; then
     found+=("$i")
   fi
 done
 
 list_found() {
   if [[ ${#found[@]} -eq 0 ]]; then
-    echo "Không thấy Cursor, Claude Code, Antigravity, Codex, hay ~/.agents."
+    echo "Không thấy IDE hoặc CLI nào trong scripts/agents.tsv."
     return
   fi
-  echo "Repo $version. IDE tìm thấy:"
-  local n=1
+  echo "Repo $version. IDE và CLI tìm thấy:"
+  local n=1 i dest
   for i in "${found[@]}"; do
-    printf '  [%s] %-14s %s  %s\n' "$n" "${labels[$i]}" "$HOME/${rels[$i]}" "$(status_of "${rels[$i]}")"
+    dest="$(agent_dests "$i" | paste -sd ',' -)"
+    printf '  [%s] %-16s %s  %s\n' "$n" "${labels[$i]}" "$dest" "$(status_of "$(agent_dests "$i" | head -n 1)")"
     n=$((n + 1))
   done
 }
 
 apply_indexes() {
-  local idx
+  local idx dest
   selected=()
   for idx in "$@"; do
-    install_one "${rels[$idx]}"
-    selected+=("${rels[$idx]}")
+    install_agent "$idx"
+    while IFS= read -r dest; do
+      selected+=("$dest")
+    done < <(agent_dests "$idx")
   done
 }
 
@@ -289,17 +341,20 @@ case "$mode" in
     list_found
     [[ ${#found[@]} -gt 0 ]] || exit 1
     for i in "${found[@]}"; do
-      dest="${rels[$i]}"
-      current="$(installed_version "$HOME/$dest")"
-      if [[ -n "$current" && "$current" != "$version" ]] || [[ -z "$current" && -e "$HOME/$dest/processing-the-flow" ]]; then
-        install_one "$dest"
-      elif [[ "$current" == "$version" ]]; then
-        echo "Giữ ${labels[$i]} ở $version"
-      fi
+      while IFS= read -r dest; do
+        current="$(installed_version "$HOME/$dest")"
+        if [[ -n "$current" && "$current" != "$version" ]] || [[ -z "$current" && -e "$HOME/$dest/processing-the-flow" ]]; then
+          install_one "$dest"
+        elif [[ "$current" == "$version" ]]; then
+          echo "Giữ ${labels[$i]} $dest ở $version"
+        fi
+      done < <(agent_dests "$i")
     done
     all_rels=()
     for i in "${found[@]}"; do
-      all_rels+=("${rels[$i]}")
+      while IFS= read -r dest; do
+        all_rels+=("$dest")
+      done < <(agent_dests "$i")
     done
     if [[ "$with_recommended" -eq 1 ]]; then
       install_recommended "${all_rels[@]}"
@@ -314,9 +369,11 @@ case "$mode" in
       ok=0
       for i in "${!ids[@]}"; do
         if [[ "${ids[$i]}" == "$name" ]]; then
-          present "$name" || { echo "Không thấy $name trên máy này." >&2; exit 1; }
-          install_one "${rels[$i]}"
-          selected+=("${rels[$i]}")
+          agent_present "${detects[$i]}" || { echo "Không thấy $name trên máy này." >&2; exit 1; }
+          install_agent "$i"
+          while IFS= read -r dest; do
+            selected+=("$dest")
+          done < <(agent_dests "$i")
           ok=1
         fi
       done

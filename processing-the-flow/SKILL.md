@@ -9,6 +9,22 @@ description: >-
 
 # Processing the flow
 
+The first turn of a new request ends with the frontier questions. It does not edit product code, and it does not keep searching after those questions can be asked.
+
+## Lookup
+
+The first lookup is the MCP tool `codegraph_explore`. It often does not show up as a normal function. That is not absence. Do not say it is missing, lazy, or unregistered until you have looked it up.
+
+On Cursor, call `GetDynamicTools` for the codegraph namespace, then `CallDynamicTool` with tool name `codegraph_explore`. Pass the user's words (the symbol, the screen, the behavior). One call. Then ask the frontier and stop.
+
+Grep, ripgrep, SemanticSearch, and a line that says `Searched <word>` are not that call. Shell `find`, `ls`, and `head` are not that call. If you already used one, stop and make the MCP call before any other search.
+
+Stay inside the open workspace. Do not search the parent of that repo.
+
+A screen, component, token, or XAML fact is one frontend MCP call (`get_ui_component`, `get_ui_catalog`, or `audit_ux_interface`) after the same kind of discovery, when that server exists.
+
+`codegraph_explore` is absent only when discovery returns no codegraph tool. Say the server is not connected, in one line, then read a file inside the open workspace. Do not explain the MCP loading format.
+
 The agent is the prompter after context is locked. Advance until a stop line is true. Do not ask whether to continue once `CONTEXT.md` has every required slot filled by the user.
 
 Files are the authority. A later session resumes from `FLOW.md`, not from chat memory. Each execute task reads `CONTEXT.md` and that task only.
@@ -66,19 +82,13 @@ Rewrite this file at the start and end of every gate. The first write sets `Phas
 
 Run this before research, plan, or code. One call keeps asking until nothing is left assumed.
 
-Look up facts yourself: `GLOSSARY.md`, ADRs, code, the test command, screen names. Do not ask the user for a fact you can read. When the code contradicts the user, say so and ask which is right.
+Look up facts with the Lookup section above: glossary, ADRs, one MCP call, the test command, screen names. Do not ask the user for a fact that call can read. When the code contradicts the user, say so and ask which is right.
 
 A fuzzy term gets one precise candidate. When it clashes with the glossary, ask which meaning stands. When a relationship is fuzzy, test it with one concrete scenario and ask if that case holds. When a term is settled, add `Term: meaning` to `GLOSSARY.md` then. If `GLOSSARY-MAP.md` exists, write the term in the glossary that map names for this area. A glossary line is a meaning, not an implementation note.
 
 Write an ADR only when the decision is hard to reverse, surprising without this context, and a real trade-off. Otherwise do not write one.
 
-The frontier is every decision you can ask now without guessing an answer you have not heard. Ask that whole frontier in one round, then wait.
-
-```text
-Q1. <title>
-<question>
-Recommended: <answer>. Yes accepts this.
-```
+The frontier is every decision you can ask now without guessing an answer you have not heard. Ask that whole frontier in one round, then wait. Follow the Questions section of `coordinating-agents`: one letter per proposal, and the last choice is `Người dùng quyết định`.
 
 The first round includes every item below that the user has not already answered: what is true when this is finished, who does it, the main path and its input, the failure or empty or forbidden case, what this work will not do, how to verify it, and the source doc or that this prompt is the only source. A screen adds which screen and which visual system, or none. A bug adds how to reproduce it and the actual result versus the expected result.
 

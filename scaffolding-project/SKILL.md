@@ -15,7 +15,7 @@ Read what exists: git remote, package or build manifests, test scripts, `AGENTS.
 
 ## 2. Settle the open forks
 
-Ask one fork at a time, and only if inspection left it open. Lead with the recommended answer.
+Ask one round for every fork inspection left open. Follow the Questions section of `coordinating-agents`.
 
 - **Issue tracker.** GitHub remote → GitHub issues. No remote → markdown files in `work/`. Record the choice in `docs/agents/issue-tracker.md`.
 - **Maintenance loop.** Default: no. A loop starts at L1 (report only) and only when the user wants the repo watched. Then follow `running-the-loop`. Write `LOOP.md`, one `STATE.md` per pattern, `loop-budget.md`, `loop-run-log.md`, and `loop-constraints.md` with the denylist and no auto-merge.

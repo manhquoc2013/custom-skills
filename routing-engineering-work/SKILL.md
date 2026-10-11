@@ -3,13 +3,13 @@ name: routing-engineering-work
 description: >-
   Use when the user asks to dựng dự án, scaffold or start a repo, thêm chức năng,
   add a feature from a doc, ticket, or idea, viết prompt, follow the engineering
-  process, or run loop-engineering, triage, or an agent loop. Use when the path
-  (scaffold, specify, implement, prompt, loop, or UI) is not already chosen.
+  process, or run loop-engineering, triage, or an agent loop. Use when they ask
+  to review, refactor, lint, or speed up code and the path is not already chosen.
 ---
 
 # Routing engineering work
 
-Pick one path, then read that skill and follow it before any other work. One path per request. A second path starts only after the first skill's done condition is met.
+Pick one path, then read that skill and follow it before any other work. One path per request. A second path starts only after the first skill's done condition is met. If the path itself is a question, follow the Questions section of `coordinating-agents`.
 
 | Signal | Skill |
 |--------|--------|
@@ -21,6 +21,10 @@ Pick one path, then read that skill and follow it before any other work. One pat
 | "Thiết kế vòng lặp", design a workflow, what loop should exist | `prompting-the-loop`, then `running-the-loop` after the prompt exists |
 | Recurring loop, triage, CI, PR babysit, "until done" with a budget | `running-the-loop` |
 | Screen, component, layout, color, type, motion, accessibility | `designing-interface` |
+| "Review code", "review PR", "soi diff" | `reviewing-code` |
+| "Refactor", "cấu trúc lại", no new behavior | `refactoring-code` |
+| "Lint", "typecheck", "sửa warning", "soi logic" | `checking-lint` |
+| "Cho nhanh hơn", "tối ưu perf" | `improving-performance` |
 
 UI inside a feature: run `designing-interface` during specify (for the design brief) and again during implement (before calling the screen done). The feature skills stay in charge of the gates.
 

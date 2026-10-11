@@ -19,12 +19,32 @@ names=(
   implementing-from-spec
   prompting-the-loop
   running-the-loop
+  process
   processing-the-flow
   designing-interface
+  reviewing-code
+  refactoring-code
+  checking-lint
+  improving-performance
 )
 
+copy_skill() {
+  local src="$1" target="$2"
+  if [[ -L "$target" ]]; then
+    rm "$target"
+  elif [[ -d "$target" ]]; then
+    rm -rf "$target"
+  fi
+  mkdir -p "$target"
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a "$src/" "$target/"
+  else
+    cp -R "$src"/. "$target"/
+  fi
+}
+
 for name in "${names[@]}"; do
-  ln -sfn "$root/$name" "$dest/$name"
+  copy_skill "$root/$name" "$dest/$name"
 done
 
-echo "linked ${#names[@]} skills into $dest"
+echo "installed ${#names[@]} skills into $dest"

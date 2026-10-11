@@ -8,7 +8,7 @@ description: >-
 
 # Prompting the loop
 
-The deliverable is one prompt another session can run without the author in the room. Fill every section. A section that says "use your judgment" is unfinished.
+The deliverable is one prompt another session can run without the author in the room. Fill every section. A section that says "use your judgment" is unfinished. A question to the user follows the Questions section of `coordinating-agents`.
 
 ```markdown
 # {name}

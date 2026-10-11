@@ -10,14 +10,31 @@ $mode = ""
 foreach ($arg in $args) {
   if ($arg -in @("--list", "--all", "--update")) { $mode = $arg }
 }
+if ($args -contains "--pull") {
+  git -C $root pull --ff-only
+  $version = (Get-Content (Join-Path $root "VERSION") -Raw).Trim()
+}
 
-$targets = @(
-  @{ Id = "cursor"; Label = "Cursor"; Dest = ".cursor\skills"; Seen = { Test-Path "$env:USERPROFILE\.cursor" -or (Get-Command cursor -ErrorAction SilentlyContinue) } }
-  @{ Id = "claude"; Label = "Claude Code"; Dest = ".claude\skills"; Seen = { Test-Path "$env:USERPROFILE\.claude" -or (Get-Command claude -ErrorAction SilentlyContinue) } }
-  @{ Id = "antigravity"; Label = "Antigravity"; Dest = ".gemini\antigravity\skills"; Seen = { Test-Path "$env:USERPROFILE\.gemini\antigravity" -or Test-Path "$env:USERPROFILE\.antigravity" -or (Get-Command agy -ErrorAction SilentlyContinue) } }
-  @{ Id = "codex"; Label = "Codex"; Dest = ".codex\skills"; Seen = { Test-Path "$env:USERPROFILE\.codex" -or (Get-Command codex -ErrorAction SilentlyContinue) } }
-  @{ Id = "agents"; Label = "Agents"; Dest = ".agents\skills"; Seen = { Test-Path "$env:USERPROFILE\.agents" } }
-)
+$agentsFile = Join-Path $root "scripts\agents.tsv"
+$targets = @()
+foreach ($line in Get-Content $agentsFile) {
+  if ($line -match '^\s*#' -or [string]::IsNullOrWhiteSpace($line)) { continue }
+  $parts = $line -split '\|', 4
+  $targets += @{ Id = $parts[0]; Label = $parts[1]; Detect = $parts[2]; Dests = @($parts[3] -split ',') }
+}
+
+function Test-AgentPresent($detect) {
+  foreach ($token in ($detect -split ',')) {
+    if ($token.StartsWith("bin:")) {
+      if (Get-Command $token.Substring(4) -ErrorAction SilentlyContinue) { return $true }
+    } elseif ($token.StartsWith("app:")) {
+      if (Test-Path $token.Substring(4)) { return $true }
+    } elseif (Test-Path (Join-Path $env:USERPROFILE ($token -replace '/', '\'))) {
+      return $true
+    }
+  }
+  return $false
+}
 
 $names = @(
   "installing-skills",
@@ -28,20 +45,38 @@ $names = @(
   "implementing-from-spec",
   "prompting-the-loop",
   "running-the-loop",
+  "process",
   "processing-the-flow",
-  "designing-interface"
+  "designing-interface",
+  "reviewing-code",
+  "refactoring-code",
+  "checking-lint",
+  "improving-performance"
 )
+
+function Remove-SkillPath($path) {
+  if (-not (Test-Path $path)) { return }
+  $item = Get-Item $path -Force
+  if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+    cmd.exe /c "rmdir `"$path`""
+  } else {
+    Remove-Item $path -Recurse -Force
+  }
+}
+
+function Copy-Skill($src, $destSkill) {
+  Remove-SkillPath $destSkill
+  Copy-Item -Path $src -Destination $destSkill -Recurse -Force
+}
 
 function Install-One($rel) {
   $dest = Join-Path $env:USERPROFILE $rel
   New-Item -ItemType Directory -Force -Path $dest | Out-Null
   foreach ($name in $names) {
-    $link = Join-Path $dest $name
-    if (Test-Path $link) { Remove-Item $link -Force }
-    New-Item -ItemType Junction -Path $link -Target (Join-Path $root $name) | Out-Null
+    Copy-Skill (Join-Path $root $name) (Join-Path $dest $name)
   }
   Set-Content -Path (Join-Path $dest ".engineering-skills-version") -Value $version
-  Write-Output "linked $($names.Count) skills into $dest ($version)"
+  Write-Output "installed $($names.Count) skills into $dest ($version)"
 }
 
 function Read-Bundles {
@@ -55,9 +90,11 @@ function Read-Bundles {
 }
 
 function Test-SkillPresent($name) {
-  foreach ($target in $targets) {
-    $skill = Join-Path (Join-Path $env:USERPROFILE $target.Dest) "$name\SKILL.md"
-    if (Test-Path $skill) { return $true }
+  foreach ($agent in $targets) {
+    foreach ($rel in $agent.Dests) {
+      $skill = Join-Path (Join-Path $env:USERPROFILE ($rel -replace '/', '\')) "$name\SKILL.md"
+      if (Test-Path $skill) { return $true }
+    }
   }
   $plugins = Join-Path $env:USERPROFILE ".cursor\plugins"
   if (Test-Path $plugins) {
@@ -111,13 +148,8 @@ function Install-Recommended($rels) {
       foreach ($rel in $rels) {
         $dest = Join-Path $env:USERPROFILE $rel
         $target = Join-Path $dest $name
-        if ((Test-Path $target) -and -not ((Get-Item $target -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) {
-          Write-Output "Giữ $target vì thư mục này không phải junction."
-          continue
-        }
-        if (Test-Path $target) { Remove-Item $target -Force }
-        New-Item -ItemType Junction -Path $target -Target $src | Out-Null
-        Write-Output "linked $name into $dest"
+        Copy-Skill $src $target
+        Write-Output "installed $name into $dest"
       }
     }
   }
@@ -155,17 +187,18 @@ function Offer-Recommended($rels) {
 
 $found = @()
 foreach ($target in $targets) {
-  if (& $target.Seen) { $found += $target }
+  if (Test-AgentPresent $target.Detect) { $found += $target }
 }
 
 if ($found.Count -eq 0) {
-  Write-Output "Không thấy Cursor, Claude Code, Antigravity, Codex, hay .agents."
+  Write-Output "Không thấy IDE hoặc CLI nào trong scripts/agents.tsv."
   exit 1
 }
 
-Write-Output "Repo $version. IDE tìm thấy:"
+Write-Output "Repo $version. IDE và CLI tìm thấy:"
 for ($n = 0; $n -lt $found.Count; $n++) {
-  $dest = Join-Path $env:USERPROFILE $found[$n].Dest
+  $first = $found[$n].Dests[0] -replace '/', '\'
+  $dest = Join-Path $env:USERPROFILE $first
   $marker = Join-Path $dest ".engineering-skills-version"
   $state = "chưa cài"
   if (Test-Path $marker) {
@@ -174,7 +207,8 @@ for ($n = 0; $n -lt $found.Count; $n++) {
   } elseif (Test-Path (Join-Path $dest "processing-the-flow")) {
     $state = "đã gắn, chưa ghi phiên bản"
   }
-  Write-Output ("  [{0}] {1,-14} {2}  {3}" -f ($n + 1), $found[$n].Label, $dest, $state)
+  $where = ($found[$n].Dests -join ",")
+  Write-Output ("  [{0}] {1,-16} {2}  {3}" -f ($n + 1), $found[$n].Label, $where, $state)
 }
 
 if ($mode -eq "--list") { exit 0 }
@@ -182,24 +216,31 @@ if ($mode -eq "--list") { exit 0 }
 $chosen = @()
 if ($mode -eq "--all") {
   foreach ($target in $found) {
-    Install-One $target.Dest
-    $chosen += $target.Dest
+    foreach ($rel in $target.Dests) {
+      $path = $rel -replace '/', '\'
+      Install-One $path
+      $chosen += $path
+    }
   }
   Offer-Recommended $chosen
   exit 0
 }
 if ($mode -eq "--update") {
   foreach ($target in $found) {
-    $dest = Join-Path $env:USERPROFILE $target.Dest
-    $marker = Join-Path $dest ".engineering-skills-version"
-    $current = if (Test-Path $marker) { (Get-Content $marker -Raw).Trim() } else { "" }
-    if ($current -eq $version) {
-      Write-Output "Giữ $($target.Label) ở $version"
-    } elseif ($current -or (Test-Path (Join-Path $dest "processing-the-flow"))) {
-      Install-One $target.Dest
+    foreach ($rel in $target.Dests) {
+      $path = $rel -replace '/', '\'
+      $dest = Join-Path $env:USERPROFILE $path
+      $marker = Join-Path $dest ".engineering-skills-version"
+      $current = if (Test-Path $marker) { (Get-Content $marker -Raw).Trim() } else { "" }
+      if ($current -eq $version) {
+        Write-Output "Giữ $($target.Label) $rel ở $version"
+      } elseif ($current -or (Test-Path (Join-Path $dest "processing-the-flow"))) {
+        Install-One $path
+      }
     }
   }
-  $rels = @($found | ForEach-Object { $_.Dest })
+  $rels = @()
+  foreach ($target in $found) { foreach ($rel in $target.Dests) { $rels += ($rel -replace '/', '\') } }
   if ($withRecommended) {
     Install-Recommended $rels
   } else {
@@ -211,7 +252,7 @@ if ($mode -eq "--update") {
 
 $answer = Read-Host "Nhập số, cách nhau bằng dấu phẩy, hoặc all. Enter = tất cả"
 if ([string]::IsNullOrWhiteSpace($answer) -or $answer -eq "all") {
-  foreach ($target in $found) { $chosen += $target.Dest }
+  foreach ($target in $found) { foreach ($rel in $target.Dests) { $chosen += ($rel -replace '/', '\') } }
 } else {
   foreach ($token in ($answer -split ",")) {
     $token = $token.Trim()
@@ -219,7 +260,7 @@ if ([string]::IsNullOrWhiteSpace($answer) -or $answer -eq "all") {
     if (-not [int]::TryParse($token, [ref]$index) -or $index -lt 1 -or $index -gt $found.Count) {
       Write-Error "Số không hợp lệ: $token"
     }
-    $chosen += $found[$index - 1].Dest
+    foreach ($rel in $found[$index - 1].Dests) { $chosen += ($rel -replace '/', '\') }
   }
 }
 foreach ($rel in $chosen) { Install-One $rel }

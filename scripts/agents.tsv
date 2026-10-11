@@ -1,0 +1,47 @@
+# id|label|detect|destinations
+# detect: home-relative directory, bin:name, or app:/absolute/path. Any match counts.
+# destinations: home-relative skill directories, copied as real folders.
+# Paths follow the agent catalog used by vercel-labs/skills and the Antigravity docs.
+# Antigravity IDE reads ~/.gemini/config/skills (legacy ~/.gemini/antigravity/skills still works).
+# Antigravity CLI reads ~/.gemini/antigravity-cli/skills. Codex reads ~/.agents/skills and ~/.codex/skills.
+cursor|Cursor|.cursor,bin:cursor,app:/Applications/Cursor.app|.cursor/skills
+claude-code|Claude Code|.claude,bin:claude|.claude/skills
+codex|Codex|.codex,bin:codex|.agents/skills,.codex/skills
+gemini-cli|Gemini CLI|bin:gemini|.gemini/skills,.agents/skills
+antigravity|Antigravity|.gemini/antigravity,.antigravity,.gemini/antigravity-cli,bin:agy|.gemini/config/skills,.gemini/antigravity/skills,.gemini/antigravity-cli/skills
+github-copilot|GitHub Copilot|.copilot,bin:copilot|.copilot/skills,.agents/skills
+opencode|OpenCode|.config/opencode,bin:opencode|.config/opencode/skills,.agents/skills
+cline|Cline|.cline,bin:cline|.agents/skills
+continue|Continue|.continue,bin:continue|.continue/skills
+windsurf|Windsurf|.codeium/windsurf,.windsurf,bin:windsurf|.codeium/windsurf/skills
+kilo|Kilo Code|.kilo,bin:kilo|.kilo/skills,.agents/skills
+roo|Roo Code|.roo,bin:roo|.roo/skills
+qwen-code|Qwen Code|.qwen,bin:qwen|.qwen/skills
+grok|Grok Build|.grok,bin:grok|.grok/skills
+kimi|Kimi Code|bin:kimi|.agents/skills
+hermes|Hermes Agent|.hermes,bin:hermes|.hermes/skills
+devin|Devin|.config/devin,bin:devin|.config/devin/skills
+augment|Augment|.augment,bin:augment|.augment/skills
+trae|Trae|.trae,bin:trae|.trae/skills
+qoder|Qoder|.qoder,bin:qoder|.qoder/skills
+warp|Warp|bin:warp|.agents/skills
+zed|Zed|.zed,bin:zed|.agents/skills
+goose|Goose|.config/goose,bin:goose|.config/goose/skills
+kiro|Kiro|.kiro,bin:kiro|.kiro/skills
+codebuddy|CodeBuddy|.codebuddy,bin:codebuddy|.codebuddy/skills
+openclaw|OpenClaw|.openclaw,.clawdbot,.moltbot,bin:openclaw|.openclaw/skills
+crush|Crush|.config/crush,bin:crush|.config/crush/skills
+aider-desk|AiderDesk|.aider-desk,bin:aider|.aider-desk/skills
+amp|Amp|.config/amp,bin:amp|.config/agents/skills
+bob|IBM Bob|.bob,bin:bob|.bob/skills
+command-code|Command Code|.commandcode,bin:commandcode|.commandcode/skills
+cortex|Cortex Code|.snowflake/cortex,bin:cortex|.snowflake/cortex/skills
+deepagents|Deep Agents|.deepagents,bin:deepagents|.deepagents/agent/skills
+firebender|Firebender|.firebender,bin:firebender|.firebender/skills
+forgecode|ForgeCode|.forge,bin:forge|.forge/skills
+iflow-cli|iFlow CLI|.iflow,bin:iflow|.iflow/skills
+junie|Junie|.junie,bin:junie|.junie/skills
+mcpjam|MCPJam|.mcpjam,bin:mcpjam|.mcpjam/skills
+minimax-code|MiniMax Code|.minimax,bin:minimax|.minimax/skills
+mistral-vibe|Mistral Vibe|.vibe,bin:vibe|.vibe/skills
+openhands|OpenHands|.openhands,bin:openhands|.openhands/skills

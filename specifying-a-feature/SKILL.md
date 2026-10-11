@@ -11,7 +11,7 @@ description: >-
 
 No implementation in this skill. The artifact is a verdict and, only after GO, a plan. Code starts in `implementing-from-spec`.
 
-When this skill is the top-level call, run the Grill section of `processing-the-flow` before research. Do not plan while that frontier is still open.
+When this skill is the top-level call, run the Grill section of `processing-the-flow` before research. Do not plan while that frontier is still open. Any other question follows the Questions section of `coordinating-agents`.
 
 When `processing-the-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again and do not rewrite its slots. Read and follow `writing-plans`, then write a plan that gives every `REQ-` id exactly one task. Save it to `work/{slug}/plan/PLAN.md`. If a `REQ-` line has no expected result, use the fog path instead of planning.
 

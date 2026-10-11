@@ -16,7 +16,7 @@ Read `work/{slug}/CONTEXT.md` when it exists, then the current task in `PLAN.md`
 
 Missing plan: stop and follow `specifying-a-feature`. Missing GO on an open-feature folder: stop. A NO-GO folder stays unbuilt. A plan that fails the plan check in `processing-the-flow` stays unbuilt.
 
-When `processing-the-flow` is the caller, the task's `REQ-` id is the seam. Do not ask again. Otherwise confirm the seams with the user when `SPEC.md` or `eng.md` has none confirmed. Tests are written only at those seams. The assertion's expected value is the expected result on that `REQ-` line. A test that calls a private function, mocks a private collaborator, asserts through a side channel, or recomputes the expected value the way the code does, is not a seam test. Write one failing test, then the code for that test. Do not write the rest of the tests first. Refactor only after that test is green, and re-run it. Refactor is not part of the red step.
+When `processing-the-flow` is the caller, the task's `REQ-` id is the seam. Do not ask again. Otherwise confirm the seams with the Questions section of `coordinating-agents` when `SPEC.md` or `eng.md` has none confirmed. Tests are written only at those seams. The assertion's expected value is the expected result on that `REQ-` line. A test that calls a private function, mocks a private collaborator, asserts through a side channel, or recomputes the expected value the way the code does, is not a seam test. Write one failing test, then the code for that test. Do not write the rest of the tests first. Refactor only after that test is green, and re-run it. Refactor is not part of the red step.
 
 ## Slice
 

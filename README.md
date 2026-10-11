@@ -6,51 +6,59 @@ Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư m�
 
 ## Cài đặt
 
-Chạy trong thư mục repo này. Script tìm IDE đang có trên máy, hiện phiên bản đã gắn, rồi hỏi cài vào IDE nào. Symlink trỏ về repo này, nên sửa skill trong repo là bản mọi IDE đang đọc. Mở phiên chat mới rồi gõ `/processing-the-flow`.
+### Từ GitHub
+
+Repo: [manhquoc2013/custom-skills](https://github.com/manhquoc2013/custom-skills).
+
+Một lệnh. Nó tải bản nén vào thư mục tạm, chép skill vào IDE, rồi xóa thư mục tạm:
 
 ```bash
-chmod +x scripts/install.sh
-./scripts/install.sh --list
-./scripts/install.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/manhquoc2013/custom-skills/main/scripts/bootstrap.sh)"
 ```
+
+Windows PowerShell:
+
+```powershell
+& ([scriptblock]::Create((Invoke-RestMethod https://raw.githubusercontent.com/manhquoc2013/custom-skills/main/scripts/bootstrap.ps1)))
+```
+
+Cùng lệnh đó cài lại khi `VERSION` trên GitHub đổi. Thêm cờ bằng cách lưu script ra file rồi chạy, ví dụ `bash /tmp/bootstrap.sh --all`.
+
+### Trong thư mục repo
+
+Mỗi skill được chép thành một thư mục thật với `SKILL.md` là file thường. Sửa file trong repo chưa đổi bản đã cài. `--update` chép lại khi file `VERSION` đổi. Mở chat mới sau khi cài.
 
 Enter cài mọi IDE tìm thấy. Hoặc nhập số, ví dụ `1,3`.
 
 ```bash
 ./scripts/install.sh --all
 ./scripts/install.sh --update
-./scripts/install.sh --only cursor claude
+./scripts/install.sh --only cursor claude-code
 ```
 
-`--update` gắn lại chỗ nào đang cài phiên bản khác với file `VERSION`. Phiên bản mới là đổi số trong `VERSION`, rồi chạy `--update`.
+`--update` chép lại skill ở IDE nào đang cài phiên bản khác với file `VERSION`.
 
-Sau khi gắn pack, script liệt kê skill bổ sung trong `recommended-skills.tsv` (Superpowers, `diagnosing-bugs`, `ui-ux-pro-max`) mà máy chưa có, rồi hỏi có tự động cài vào đúng các IDE vừa chọn không. Enter là có. `n` là bỏ qua. Skill đã có `SKILL.md` trong thư mục skill hoặc plugin Cursor thì không clone và không gắn lại.
+Sau khi chép pack, script liệt kê skill bổ sung trong `recommended-skills.tsv` (Superpowers, `diagnosing-bugs`, `ui-ux-pro-max`) mà máy chưa có, rồi hỏi có chép vào đúng các IDE vừa chọn không. Enter là có. `n` là bỏ qua. Skill đã có `SKILL.md` trong thư mục skill hoặc plugin Cursor thì giữ nguyên.
 
 ```bash
 ./scripts/install.sh --all --with-recommended
 ./scripts/install.sh --all --no-recommended
 ```
 
-| Công cụ | Thư mục global | Thư mục trong một project |
-|---------|----------------|---------------------------|
-| Cursor | `~/.cursor/skills` | `.cursor/skills` |
-| Claude Code | `~/.claude/skills` | `.claude/skills` |
-| Antigravity | `~/.gemini/antigravity/skills` | cùng thư mục global ở trên |
-| Codex | `~/.codex/skills` | `.agents/skills` |
-| Agent đọc `~/.agents/skills` | `~/.agents/skills` | `.agents/skills` |
+| Công cụ | Thư mục global |
+|---------|----------------|
+| Cursor | `~/.cursor/skills` |
+| Claude Code | `~/.claude/skills` |
+| Codex | `~/.agents/skills` và `~/.codex/skills` |
+| Gemini CLI | `~/.gemini/skills` và `~/.agents/skills` |
+| Antigravity IDE | `~/.gemini/config/skills` và `~/.gemini/antigravity/skills` |
+| Antigravity CLI | `~/.gemini/antigravity-cli/skills` và `~/.gemini/config/skills` |
 
-```bash
-./scripts/link-skills.sh ~/.claude/skills
-./scripts/link-skills.sh ~/.gemini/antigravity/skills
-./scripts/link-skills.sh ~/.codex/skills
-./scripts/link-skills.sh ~/.agents/skills
-```
-
-Một project thì đổi đích, ví dụ `./scripts/link-skills.sh .claude/skills`.
+Danh sách đủ IDE và CLI, cùng cách nhận ra chúng trên máy, nằm trong `scripts/agents.tsv`. Script chỉ chép vào công cụ nào thực sự có trên máy. Một project thì `./scripts/link-skills.sh .agents/skills` hoặc `.claude/skills`.
 
 ### Windows
 
-`%USERPROFILE%` là `C:\Users\<tên>`. Trong PowerShell, chạy ở thư mục repo này. Junction không cần quyền Administrator. Cùng cách chọn IDE như trên macOS.
+`%USERPROFILE%` là `C:\Users\<tên>`. Trong PowerShell, chạy ở thư mục repo này. Cùng cách chọn IDE như trên macOS. File `SKILL.md` là file thường, không phải junction.
 
 ```powershell
 ./scripts/install.ps1 --list
@@ -58,32 +66,26 @@ Một project thì đổi đích, ví dụ `./scripts/link-skills.sh .claude/ski
 ./scripts/install.ps1 --update
 ```
 
-| Công cụ | Thư mục global |
-|---------|----------------|
-| Cursor | `%USERPROFILE%\.cursor\skills` |
-| Claude Code | `%USERPROFILE%\.claude\skills` |
-| Antigravity | `%USERPROFILE%\.gemini\antigravity\skills` |
-| Codex | `%USERPROFILE%\.codex\skills` |
-| Agent đọc `.agents\skills` | `%USERPROFILE%\.agents\skills` |
+Windows dùng cùng `scripts/agents.tsv`. Đường dẫn nằm dưới `%USERPROFILE%`, ví dụ `%USERPROFILE%\.gemini\config\skills` cho Antigravity và `%USERPROFILE%\.claude\skills` cho Claude Code.
 
-Git Bash trên Windows chạy `./scripts/install.sh` như macOS. Muốn gắn một thư mục tay thì `./scripts/link-skills.sh ~/.cursor/skills`.
+Git Bash trên Windows chạy `./scripts/install.sh` như macOS. Muốn chép vào một thư mục tay thì `./scripts/link-skills.sh ~/.cursor/skills`.
 
 ### Agent tùy chỉnh
 
 Agent không tự quét thư mục skill thì thêm một dòng vào file hướng dẫn của nó (`AGENTS.md`, system prompt, hoặc file rules):
 
 ```markdown
-Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử lý luồng, đọc và làm theo `processing-the-flow/SKILL.md` trong `/Users/tranquoc/Developer/mcp/skills`. Các skill cùng thư mục được file đó nêu tên thì đọc tiếp.
+Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử lý luồng, đọc và làm theo `processing-the-flow/SKILL.md` trong bản clone của https://github.com/manhquoc2013/custom-skills. Các skill cùng thư mục được file đó nêu tên thì đọc tiếp.
 ```
 
 Đổi đường dẫn nếu repo nằm chỗ khác. Định dạng thư mục vẫn là `<tên>/SKILL.md` với `name` và `description` ở đầu file.
 
 ### Gỡ
 
-Xóa symlink trong đúng thư mục đã cài. Không xóa thư mục trong repo này.
+Xóa đúng thư mục skill đã cài. Không xóa thư mục trong repo này.
 
 ```bash
-rm ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineering-work,scaffolding-project,specifying-a-feature,implementing-from-spec,prompting-the-loop,running-the-loop,processing-the-flow,designing-interface,.engineering-skills-version}
+rm -rf ~/.cursor/skills/{installing-skills,coordinating-agents,routing-engineering-work,scaffolding-project,specifying-a-feature,implementing-from-spec,prompting-the-loop,running-the-loop,process,processing-the-flow,designing-interface,reviewing-code,refactoring-code,checking-lint,improving-performance} ~/.cursor/skills/.engineering-skills-version
 ```
 
 Đổi `~/.cursor/skills` thành thư mục của Claude, Antigravity, hoặc Codex nếu gỡ ở đó.
@@ -101,7 +103,7 @@ Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trư
 
 | Bạn đang muốn | Gõ | Xong khi |
 |---------------|-----|----------|
-| Làm xong một chức năng, một bug, hoặc một ý từ đầu đến PR | `/processing-the-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
+| Làm xong một chức năng, một bug, hoặc một ý từ đầu đến PR | `/process` hoặc `/processing-the-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
 | Repo chưa có lệnh test, file harness, chỗ ghi việc | `/scaffolding-project` | Session mới build và test được mà không hỏi lại |
 | Chỉ viết spec và plan, chưa đụng code | `/specifying-a-feature` | Có `GO` hoặc `NO-GO`. Plan chỉ xuất hiện sau `GO` |
 | Plan đã có và đã `GO`, làm đúng một task | `/implementing-from-spec` | Lệnh kiểm của task đó qua một lượt verifier riêng |
@@ -109,8 +111,12 @@ Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trư
 | Nghĩ ra một vòng sẽ chạy lặp lại (triage, CI, PR, changelog) | `/prompting-the-loop`, rồi `/running-the-loop` | Prompt có trước. Vòng tuần đầu chỉ ghi báo cáo |
 | Vòng đã có, chạy một lượt: triage sáng, CI đỏ, PR kẹt, dependency, changelog, dọn sau merge | `/running-the-loop` | `STATE.md` đúng khuôn và code sản phẩm không bị sửa ở mức báo cáo |
 | Đổi nhìn, bấm, chữ, màu, chuyển động, hoặc accessibility của một màn | `/designing-interface` | `MASTER.md` có, và luồng đã bấm thử kể cả trống và lỗi |
+| Soi diff, PR, hoặc nhánh, không sửa trong lượt đó | `/reviewing-code` | `REVIEW.md` có hai mục Spec và Standards |
+| Cấu trúc lại, hành vi giữ nguyên | `/refactoring-code` | Cùng lệnh test, output sau khớp output trước |
+| Chạy lint hoặc typecheck của repo, sửa đúng dòng công cụ báo | `/checking-lint` | Lệnh đó sạch theo luật fail của chính nó |
+| Làm một đường chạy nhanh hơn | `/improving-performance` | Có số đo trước và sau trên cùng một lệnh |
 | Chưa rõ câu nói thuộc nhánh nào | `/routing-engineering-work` | Đã chọn một hàng ở trên và làm theo skill đó |
-| Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/installing-skills` | IDE bạn chọn trỏ symlink về repo này |
+| Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/installing-skills` | IDE bạn chọn có bản copy của skill |
 
 `/coordinating-agents` là luật nội bộ. Skill đang làm việc tự đọc nó khi chia subagent. Bạn không cần gõ, trừ khi muốn xem ai đang giữ file nào.
 
@@ -124,9 +130,9 @@ Sửa một chữ, một import, hoặc một tên chỉ đi tắt trong `/proce
 
 ## Làm một việc cho xong
 
-Gọi `/processing-the-flow`, rồi dán yêu cầu.
+Gọi `/process` hoặc `/processing-the-flow` rồi viết yêu cầu ngay trong cùng một tin nhắn.
 
-Một lệnh là đủ. Agent tự tra fact trong repo. Việc cần bạn quyết thì nó hỏi theo vòng: cả nhóm câu đang hỏi được, mỗi câu có một đáp án đề xuất, `yes` là nhận đáp án đó. Câu phụ thuộc câu chưa trả lời thì để vòng sau. Thuật ngữ vừa chốt được ghi vào `GLOSSARY.md`. ADR chỉ khi quyết định khó đảo, người sau sẽ ngạc nhiên, và có đánh đổi thật.
+Một lệnh là đủ. Agent tự tra fact trong repo. Việc cần bạn quyết thì nó đưa hết câu đang hỏi được vào một phiếu. Mỗi đề xuất là một lựa chọn A, B, C, D… Đề xuất đầu ghi `(Recommended)`. Lựa chọn cuối luôn là `Người dùng quyết định`. Bạn trả lời hết rồi bấm gửi một lần. Câu phụ thuộc câu trong phiếu đó thì hỏi sau khi đã gửi. Thuật ngữ vừa chốt được ghi vào `GLOSSARY.md`. ADR chỉ khi quyết định khó đảo, người sau sẽ ngạc nhiên, và có đánh đổi thật.
 
 Nó hỏi đến khi không còn giả định im lặng. Rồi đưa danh sách và chờ bạn nói đã đủ và đã hiểu giống nhau:
 
@@ -202,4 +208,4 @@ File trạng thái vẫn nằm trong `work/{slug}/`. Superpowers không thay câ
 
 ## So với skill của Matt Pocock
 
-[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, hai trục Spec và Standards, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Pack này giữ điều phối subagent và đối chiếu từng `REQ-`. Grill hỏi cả nhóm câu được hỏi ngay, không hỏi từng câu một như bản brainstorming dài. Ý tưởng còn sương thì dừng để chốt một quyết định. Prototype là mã vứt đi. Database style của ui-ux-pro-max vẫn là phần cài thêm; checklist ưu tiên của nó nằm trong `designing-interface`.
+[mattpocock/skills](https://github.com/mattpocock/skills) mạnh ở từ vựng miền, ADR, test tại seam công khai, hai trục Spec và Standards, và vòng chẩn đoán bug phải đỏ đúng triệu chứng trước khi đoán nguyên nhân. Review trong pack này giữ hai trục đó và không gộp một bảng xếp hạng. Refactor chỉ đào sâu một chỗ sau khi test đang xanh, không viết báo cáo HTML. Lint dùng lệnh sẵn có của repo, không tự gắn Prettier hay Husky. Perf cần một số đo trước khi sửa. Pack này giữ điều phối subagent và đối chiếu từng `REQ-`. Grill hỏi cả nhóm câu được hỏi ngay, không hỏi từng câu một như bản brainstorming dài. Ý tưởng còn sương thì dừng để chốt một quyết định. Prototype là mã vứt đi. Database style của ui-ux-pro-max vẫn là phần cài thêm; checklist ưu tiên của nó nằm trong `designing-interface`.
