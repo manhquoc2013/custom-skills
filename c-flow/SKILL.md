@@ -104,6 +104,7 @@ Before the first edit of the execute phase, check the branch. On the repo's defa
 - `no-go` — research verdict is NO-GO
 - `needs-human` — an open product choice, an unaccepted CONDITIONAL, a denylist path (auth, payments, secrets, infra), or a dirty tree that is not this feature
 - `attempt-cap` — three REJECT results on the same task
+- `stalled` — the findings on one row did not shrink between two consecutive attempts. Escalate on that signal rather than spending the third attempt on a loop that is not converging.
 - `done` — verify verdict is PASS and ship recorded the PR or the commit message
 
 When `Stop` is not `none`, `Note` names the phase, the next action, and the files. It contains no secrets and does not copy `CONTEXT.md`.
