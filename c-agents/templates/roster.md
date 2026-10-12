@@ -18,7 +18,7 @@ In the file below, `## Progress` is the run summary and every other `##` heading
 <the next dispatch, or the verdict still owed>
 
 ## <agent id>
-Role: <coordinator | worker | verifier | watcher>
+Role: <coordinator | worker | verifier>
 Task: <the skill name, or the task id>
 Owns: <one path per line, or none>
 Status: <assigned | running | returned | verifying | pass | reject>

@@ -152,7 +152,7 @@ Bạn thêm hành vi thì nó đánh số lại và hỏi lần nữa. Bạn xá
 | Cổng | Việc | Sang cổng sau khi |
 |------|------|-------------------|
 | Plan | Đọc code, ghi `RESEARCH.md` với `GO`, `CONDITIONAL`, hoặc `NO-GO`, rồi `PLAN.md` | Mỗi `REQ-` có đúng một task, task có lệnh kiểm, hai task cùng đợt không sửa một file |
-| Execute | Phiên chính ghi `roster.md` rồi giao implementer. Mỗi prompt một `REQ-`, file riêng, lệnh Kept, và chữ ký produces. Xong thì giao verifier và một watcher cho cả wave | Wave `PASS` khi không trùng file, output khớp `REQ-`, và output Kept khớp kết quả trước đó |
+| Execute | Phiên chính ghi `roster.md` rồi giao implementer. Mỗi prompt một `REQ-`, file riêng, lệnh Kept, và chữ ký produces. Task cùng hình dạng gộp thành một row, một dispatch. Xong thì giao verifier cho từng row | Wave `PASS` khi không trùng file giữa các row, output khớp `REQ-`, và output Kept khớp kết quả trước đó |
 | Verify | `VERIFICATION.md` | Mọi `REQ-` khớp kết quả mong đợi, mọi hành vi cũ mà diff chạm tới vẫn khớp kết quả trước đó. Test xanh không thay cho hàng đó. Hành vi không có trong spec là `REJECT` |
 | Ship | Link PR, hoặc câu commit trong `IMPLEMENT.md` | Verify là `PASS` |
 
@@ -203,7 +203,7 @@ Luật cốt lõi nằm trong `c-agents`. Pack vẫn chạy khi Superpowers chư
 | Trước khi sửa code | `using-git-worktrees` |
 | Mỗi wave | `dispatching-parallel-agents`: giao hết task trong wave cùng một lượt, rồi phiên chính tổng hợp |
 | Trong từng subagent | `test-driven-development` |
-| Sau khi implementer trả về | Một verifier cho mỗi task, cộng một watcher cho wave. Verifier không sửa code. Watcher chỉ tìm chỗ đụng file |
+| Sau khi implementer trả về | Một verifier cho mỗi row. Verifier không sửa code; nó đối chiếu danh sách file trong diff với ô `owns` và ghi phần ngoài vào `Outside` |
 | Test đỏ hoặc bug | `systematic-debugging` |
 | Trước khi báo đạt | `verification-before-completion` |
 | Xong việc | `finishing-a-development-branch` |

@@ -5,7 +5,7 @@
 Read this only when you are about to dispatch the verifier for one worker row. The verifier never sees the worker's session. Give the dispatch an explicit model or workload tier; an omitted one inherits this session's, usually the most expensive.
 
 ```markdown
-Verdict on: <the worker row's task id>
+Verdict on: <the worker row's id>
 Owns: <the files that row claimed, one per line>
 Done check: <the same command the worker was given>
 Spec: <the REQ or spec line this task must satisfy>
@@ -30,9 +30,10 @@ Part 1 — spec compliance
 
 Part 2 — code quality
 Separation of concerns, error handling, edge cases; tests that verify behavior rather than mocks.
+Compare every file the diff touches against `Owns` and list each file outside it under `Outside`. A file outside `owns` is a REJECT.
 
 Report
-Write <work/{slug}/checks/{task}.md from the check template>. Verdict is PASS or REJECT.
+Write <work/{slug}/checks/{row}.md from the check template>. Verdict is PASS or REJECT.
 Every finding carries a severity: Critical (a break or a security hole), Important (wrong behavior, or a missing requirement), Minor (a smell the repo's own standard allows — a note, never a REJECT on its own).
 Reply: at most 15 lines: the verdict, the finding lines, one line of command output. The check file is the record.
 ```

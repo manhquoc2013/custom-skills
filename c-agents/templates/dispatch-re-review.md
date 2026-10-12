@@ -18,6 +18,6 @@ Do not review code the fix did not touch: an issue entirely outside the fix diff
 Read-only, no subagents, and the report is unverified claims — the same rules as the first review. Run only the done check; read the report for everything else.
 
 Report
-Append to <work/{slug}/checks/{task}.md>. Verdict is PASS or REJECT.
+Append to <work/{slug}/checks/{row}.md>. Verdict is PASS or REJECT.
 Reply: at most 15 lines: the verdict, one line per finding, one line of command output.
 ```

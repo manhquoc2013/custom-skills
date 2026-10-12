@@ -1,8 +1,8 @@
-# checks/{task}.md template
+# checks/{row}.md template
 
 `<...>` fill in · `<a | b>` pick one · `<none, or ...>` default `none` · anything else is literal.
 
-The logic check for one task. That task's verifier writes it; the implementer never does. Read it to see what was exercised, what passed, and what it breaks.
+The logic check for one row. That row's verifier writes it; the implementer never does. A row that carries several tasks gets one `## Evidence` block per `REQ-`. Read it to see what was exercised, what passed, and what it breaks.
 
 ```markdown
 ## Verdict

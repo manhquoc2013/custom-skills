@@ -50,7 +50,7 @@ Follow the Floor section of `c-agents` at every matching row. That floor is the 
 | first execute | About to edit the tree for a feature |
 | each wave | Two or more workers, then synthesize the wave |
 | inside each subagent | About to write production code |
-| after implementers return | A worker just returned. One verifier per task, plus one watcher, in the same response |
+| after implementers return | A worker just returned. One verifier per row, in the same response |
 | a hard bug, or a `REJECT` whose command does not name the line to edit | A hard bug: the red command does not name the line to edit, and it is not a new test waiting for its behavior |
 | verify, and before any `PASS` or done claim | About to claim pass |
 | ship | Branch is ready to merge or open a PR |
@@ -77,7 +77,7 @@ Rewrite this file at the start and end of every gate. The first write sets `Phas
 |-------|--------|----------------|
 | discuss | `CONTEXT.md` with every heading filled, a user-confirmed `REQ-` list, and the accepted approach. A screen also follows `c-design` | The user has confirmed the requirement list and accepted one approach |
 | plan | `c-spec` writes research and `PLAN.md` | Plan check passes |
-| execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
+| execute | One subagent per row in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
 | verify | `VERIFICATION.md` | Verdict is `PASS` |
 | ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the repo's full check ran in this turn |
 

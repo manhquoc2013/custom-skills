@@ -20,7 +20,7 @@ The synthesis file for one wave. Read it to see which tasks passed, what each on
 
 ## Tasks
 ### T1
-Role: <implementer | verifier | watcher>
+Row: <the row id that carries this task>
 REQ: <REQ id>
 Owns: <one path per line>
 Status: <assigned | running | returned | verifying | pass | reject>
@@ -30,5 +30,5 @@ Kept command:
 Kept output:
 
 ## Conflicts
-<files touched by two implementers, or from outside owns, one per line, or none>
+<files claimed by two rows, or from outside owns, one per line, or none>
 ```
