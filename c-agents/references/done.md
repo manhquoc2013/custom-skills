@@ -28,6 +28,8 @@ Skipping a step is not verifying. It is writing something untrue.
 | A worker finished | The diff shows the changes | The worker's own "success" report |
 | Every requirement is met | A line-by-line checklist against the `REQ-` list | The tests passing |
 
+A run that showed a failure goes into the claim, named — including a failure this change did not cause. A red result that scrolled past and went unmentioned is a claim falsified by omission.
+
 ## The claim's wording
 
 The rule covers the exact phrase, a paraphrase, a synonym, and the implication. Any wording that suggests the work is done, or that shows satisfaction with it, is a claim.

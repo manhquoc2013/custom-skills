@@ -31,6 +31,7 @@ Part 1 — spec compliance
 Part 2 — code quality
 Separation of concerns, error handling, edge cases; tests that verify behavior rather than mocks.
 Compare every file the diff touches against `Owns` and list each file outside it under `Outside`. A file outside `owns` is a REJECT.
+Do not crawl the broader codebase. Open a file outside the diff only to judge a risk you can name, and name that risk.
 
 Report
 Write <work/{slug}/checks/{row}.md from the check template>. Verdict is PASS or REJECT.
