@@ -25,6 +25,10 @@ Pick one row, then read that file before you write anything. The three shapes ar
 | Settled | The user already answered the decisions. Do not ask those again. Still ask any assumption they did not settle. | `shapes/settled.md` |
 | Open feature | An idea or a source doc, one feature, questions still open. Run research, then plan only on GO. | `shapes/open.md` |
 
+Read exactly the one row whose When holds, and no other shape file. When no row holds, this file alone is enough: ask the user which shape the request is; do not open a shape to find out.
+
+Each shape writes one artifact, and its template is beside this file: `templates/map.md` for fog, `templates/spec.md` for settled, and `templates/request.md`, `templates/research.md`, `templates/plan.md` for the open feature.
+
 ## Before you publish
 
 Reject the spec or plan before the user sees it when it contains a placeholder, a contradiction, a `REQ-` line with no expected result, a task with no failing test, a task with no produces line, or a later task that consumes a name no earlier task produces. Fix those in place. A task in a wave does not depend on another task in that same wave.

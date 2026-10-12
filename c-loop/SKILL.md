@@ -3,8 +3,7 @@ name: c-loop
 description: >-
   Use when the user wants a recurring agent loop, daily triage, CI sweeper,
   PR babysitter, dependency sweep, changelog draft, post-merge cleanup, or to
-  run until a goal with state, a budget, and a stop. Use for loop-engineering,
-  /c-loop, Automations, STATE.md, or L1/L2/L3.
+  run until a goal. Use for loop-engineering, /c-loop, Automations, or L1/L2/L3.
 ---
 
 # Running the loop

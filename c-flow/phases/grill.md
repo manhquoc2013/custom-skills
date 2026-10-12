@@ -2,7 +2,7 @@
 
 Run this before research, plan, or code. One call keeps asking until nothing is left assumed.
 
-Look up facts with the Lookup section above: glossary, ADRs, one MCP call, the test command, screen names. Do not ask the user for a fact that call can read. When the code contradicts the user, say so and ask which is right.
+Look up facts with the Lookup section of `c-flow/SKILL.md`: glossary, ADRs, one MCP call, the test command, screen names. Do not ask the user for a fact that call can read. When the code contradicts the user, say so and ask which is right.
 
 A fuzzy term gets one precise candidate. When it clashes with the glossary, ask which meaning stands. When a relationship is fuzzy, test it with one concrete scenario and ask if that case holds. When a term is settled, add `Term: meaning` to `GLOSSARY.md` then. If `GLOSSARY-MAP.md` exists, write the term in the glossary that map names for this area. A glossary line is a meaning, not an implementation note.
 

@@ -2,9 +2,8 @@
 name: c-retro
 disable-model-invocation: true
 description: >-
-  Use when the user asks for a retrospective, a retro, or "rút kinh nghiệm" after a
-  session or a feature run. Proposes changes to the repo's environment, not to the
-  code.
+  Retro after a session or a feature run. Proposes changes to the repo's
+  environment, not the code.
 ---
 
 # Retro

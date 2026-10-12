@@ -2,9 +2,7 @@
 name: c-skill
 disable-model-invocation: true
 description: >-
-  Use when writing or editing a skill, an AGENTS.md, or any document an agent
-  reads: context pointers, the two loads, the information hierarchy, leading
-  words, and pruning.
+  Writing or editing a skill, an AGENTS.md, or any document an agent reads.
 ---
 
 # Writing for agents

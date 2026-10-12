@@ -81,14 +81,17 @@ Rewrite this file at the start and end of every gate. The first write sets `Phas
 | verify | `VERIFICATION.md` | Verdict is `PASS` |
 | ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the repo's full check ran in this turn |
 
-Each phase has a file beside this one, holding the detail that only that phase needs. Read it when the phase starts, and read no other phase file:
+Each phase has one file beside this one, holding the detail that only that phase needs. The condition is the `Phase` value in `FLOW.md`, which is a closed set of five. Read the row whose condition holds, and read no other phase file:
 
-| Before | Read |
-|--------|------|
-| asking the first frontier question — the Grill section | `phases/grill.md` |
-| the plan gate | `phases/plan.md` |
-| the first dispatch of a wave | `phases/execute.md` |
-| writing `VERIFICATION.md` or a check file | `phases/verify.md` |
+| `Phase` is | Read exactly this |
+|-----------|-------------------|
+| `discuss` — before asking the first frontier question | `phases/grill.md` |
+| `plan` — before the plan gate | `phases/plan.md` |
+| `execute` — before the first dispatch of a wave | `phases/execute.md` |
+| `verify` — before writing `VERIFICATION.md` or a `checks/` file | `phases/verify.md` |
+| `ship`, or a `Phase` that is none of the four above | `none`. `FLOW.md` already carries everything the ship row needs |
+
+A row whose condition does not hold is not read, not even in part. When `FLOW.md` is missing, or its `Phase` is not one of the four, this file alone is enough to continue: do not open a phase file to find out what to do.
 
 A green suite never fills a Kept row.
 

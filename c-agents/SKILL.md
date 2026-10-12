@@ -68,7 +68,7 @@ A row is finished only at `pass`: the verifier ran the done check, the actual ou
 
 ## Harness
 
-The pack's harness files live in `references/`, one per harness. Read yours when it appears below; on any other harness use the neutral path in the section that sent you.
+The pack's harness files live in `references/`, one per harness. Read yours when it appears below; on any other harness use the neutral path in the section that sent you. Read exactly one of these, and open no other file under `references/` unless a Floor row above names it.
 
 - Claude Code: `references/claude-code.md`
 - Codex: `references/codex.md`
