@@ -2,7 +2,7 @@
 
 `<...>` fill in · `<a | b>` pick one · `<none, or ...>` default `none` · anything else is literal.
 
-One implementer's report for one task. Read it to see what the implementer changed and what it proved. It carries evidence, never a verdict.
+One implementer's report for one task. Read it to see what the implementer changed and what it proved. It carries evidence, never a verdict. This file is the full record; the message back to the parent is at most 15 lines.
 
 ```markdown
 ## Status

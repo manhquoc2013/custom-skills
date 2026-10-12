@@ -12,4 +12,5 @@ Look for reasons to reject.
 Spec: <the REQ or spec line this task must satisfy>
 Standards: <the repo rules the diff must not break, or none>
 Write: <work/{slug}/checks/{task}.md from the check template>
+Reply: at most 15 lines: the verdict, the finding lines, one line of command output. The check file is the record.
 ```

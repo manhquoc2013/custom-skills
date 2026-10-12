@@ -16,11 +16,7 @@ Every skill in this pack uses this when it asks the user something.
 
 Each question lists every real proposal, one letter each, in the user's language. A is the recommended proposal and the label ends with `(Recommended)`. The next proposals are B, C, D, E, F, and so on for as many proposals as there are. The last choice is always `Người dùng quyết định`.
 
-Every question that can be asked now goes in one form. The user answers all of them, then submits once. Read the shared harness file for the call that carries the whole form.
-
-- Cursor: `references/cursor.md`
-
-With no file for your harness, print every question in one message and wait for one reply that answers all of them.
+Every question that can be asked now goes in one form. The user answers all of them, then submits once. Read your harness file under `## Harness` for the call that carries the whole form. With no file for your harness, print every question in one message and wait for one reply that answers all of them.
 
 ```text
 Q1. <title>
@@ -53,6 +49,29 @@ These rules apply when the row matches. A missing plugin does not skip them. If 
 | About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. When the diff can change a behavior that is not the claimed one, quote that behavior's prior result and the command that still matches it. A green suite does not replace that quote. | `verification-before-completion` |
 | Branch is ready to merge or open a PR | The suite is green in this turn. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
 
+## Claiming done
+
+Before writing any claim of pass, done, or fixed, check it against this table. A row that matches is a stop, not a caveat to add.
+
+| Claim | Needs | Not enough |
+|-------|-------|------------|
+| The task passes | The done check run in this pass, output quoted | An earlier run, or "should pass" |
+| The suite is green | The kept command run in this pass | A green suite alone |
+| A bug is fixed | The original symptom re-run and passing | The code changed |
+| A regression test works | The red-green cycle seen | The test passing once |
+| A worker finished | The diff shows the changes | The worker's own "success" report |
+| Every requirement is met | A line-by-line checklist against the `REQ-` list | The tests passing |
+
+| Excuse | Reality |
+|--------|---------|
+| "Should work now" | Run it |
+| "I'm confident" | Confidence is not evidence |
+| "Just this once" | No exceptions |
+| "The linter passed" | The linter is not the compiler |
+| "The worker said success" | Read the diff |
+| "A partial check is enough" | A partial check proves nothing |
+| "I'm tired, ship it" | Exhaustion is not evidence |
+
 ## Records
 
 Any file this pack writes follows the Records section of `c-flow`.
@@ -70,9 +89,22 @@ Status moves `assigned` → `running` → `returned` → `verifying` → `pass` 
 
 A row is finished only at `pass`: the verifier ran the done check, the actual output matches the task, and the watcher found no overlap. The worker's own done sentence is not `pass`.
 
+## Harness
+
+The pack's harness files live in `references/`, one per harness. Read yours when it appears below; on any other harness use the neutral path in the section that sent you.
+
+- Claude Code: `references/claude-code.md`
+- Codex: `references/codex.md`
+- Antigravity: `references/antigravity.md`
+- Cursor: `references/cursor.md`
+
 ## Dispatch
 
 Rows with disjoint files go out in one response. Follow the parallel-worker floor. Each prompt contains only that row's task, `owns` list, and done check — build it from `templates/dispatch-implementer.md`, and the verifier's from `templates/dispatch-verifier.md`. The worker writes `work/{slug}/agents/{id}.md`, or `work/agents/{id}.md` when there is no slug, with the files it touched and the command output. It does not write the verdict.
+
+Give every row an explicit model or workload tier. An omitted one silently inherits this session's model, usually the most expensive. `mechanical` for a one-line edit or running a named command; `standard` for a task with a file list and a done check; `reasoning` for multi-file work or a design call; `critical` only for a subtle bug or an irreversible change. Plan text that already contains the code to write is transcription plus testing: take the cheapest tier. Turn count beats token price — a too-cheap model costs more in extra turns than it saves.
+
+Bound the reply. The report file is the record; the message back carries the status, the files touched, one line of command output, and the concerns, at most 15 lines. Everything a worker prints stays in this session's context and is re-read on every later turn.
 
 After those workers return, dispatch their verifiers and one watcher in the same response.
 

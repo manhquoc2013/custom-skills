@@ -15,9 +15,7 @@ The first turn of a new request ends with the frontier questions. It does not ed
 
 The first lookup is the MCP tool `codegraph_explore`. It often does not show up as a normal function, because most harnesses expose MCP tools through a discovery call rather than as named functions. That is not absence. Do not say it is missing, lazy, or unregistered until you have looked it up.
 
-If your harness has a file, read it for the exact calls. It is the only harness-specific part of this section, and the pack keeps exactly one, shared, in `c-agents`.
-
-- Cursor: `c-agents/references/cursor.md`
+If your harness has a file, read it in `c-agents/references/` for the exact calls. That directory is the pack's one harness list; nothing else keeps a copy.
 
 With no file for your harness, reach the codegraph server through your harness's own MCP discovery, then call `codegraph_explore` with the user's words (the symbol, the screen, the behavior). One call. Then ask the frontier and stop.
 
