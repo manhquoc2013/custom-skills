@@ -32,6 +32,32 @@ When `c-loop` is the caller, the slice is one failure. Reproduce it. Smallest di
 
 Read and follow `test-driven-development` for the slice. Code written before the failing test is deleted and the slice starts again. A red test written for this task's new behavior is the red step. Do not open `c-debug`. Open it only for a hard bug: a command that already passed, or a symptom the user reported, goes red and the output does not name the line to edit. When `c-flow` is the caller, that mode is `--fix`. `--find` stops before the production edit. `--fix` starts only after the cause is quoted. Read `systematic-debugging`. If `diagnosing-bugs` is available, follow it. The implementer stops at the report. The verifier is a separate pass, with the two axes of `c-agents`; it runs the proving command in that pass and writes the verdict. For a bug, the record names the hypothesis that was right.
 
+## No exceptions
+
+Code written before the test that should have failed is deleted. Start over.
+
+- Do not keep it as a reference.
+- Do not adapt it while writing the test.
+- Do not look at it.
+- Delete means delete.
+
+`Violating the letter of this rule is violating the spirit of it.`
+
+| Excuse | Reality |
+|--------|---------|
+| "Too simple to need a test" | Small code breaks too. The test takes a minute. |
+| "I'll write the test right after" | A test written after the code proves nothing; it passes on its first run. |
+| "Tests after reach the same goal" | Tests-after ask what this does. Tests-first ask what it should do. |
+
+Red flags — stop and start the slice over:
+
+- production code exists before a failing test
+- "I already checked it by hand"
+- "this case is different because..."
+- the new test passed on its first run
+- a test was edited to match the code
+- the test asserts a private function, or recomputes the expected value the way the code does
+
 ## Report
 
 The implementer writes `work/{slug}/agents/{id}.md` from `templates/report.md`, and does not write a verdict.
