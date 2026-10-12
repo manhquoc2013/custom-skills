@@ -33,7 +33,13 @@ There is no build system: no `package.json`, no Makefile, no linter, no typechec
 bash tests/test_install_crlf.sh      # the repo's only test
 ```
 
-`bash` is not always present. On a Windows host where WSL is broken, `bash <script>` fails with `execvpe(/bin/bash) failed`. When that happens the shell test and `install.sh` cannot run on this machine — say so, rather than reporting them as passed.
+`bash` is not always on `PATH`. On this Windows host, `bash <script>` fails with `execvpe(/bin/bash) failed` because the default WSL distribution is `docker-desktop`, which has no bash. Run the shell scripts through the Ubuntu distribution instead:
+
+```bash
+wsl.exe -d Ubuntu -e bash tests/test_install_crlf.sh
+```
+
+Windows drive paths reach WSL as `/mnt/c/...`. The WSL home is reachable from Windows as `\\wsl$\Ubuntu\home\<user>`.
 
 `ui-ux-pro-max` is a separate optional skill, not installed by this repo's scripts.
 
