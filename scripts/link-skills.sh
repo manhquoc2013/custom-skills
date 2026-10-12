@@ -27,6 +27,8 @@ names=(
   c-lint
   c-perf
   c-debug
+  c-retro
+  c-skill
 )
 
 copy_skill() {

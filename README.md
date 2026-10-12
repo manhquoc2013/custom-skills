@@ -85,7 +85,7 @@ Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử 
 Xóa đúng thư mục skill đã cài. Không xóa thư mục trong repo này.
 
 ```bash
-rm -rf ~/.cursor/skills/{c-install,c-agents,c-route,c-scaffold,c-spec,c-implement,c-prompt,c-loop,c-process,c-flow,c-design,c-review,c-refactor,c-lint,c-perf,c-debug} ~/.cursor/skills/.engineering-skills-version
+rm -rf ~/.cursor/skills/{c-install,c-agents,c-route,c-scaffold,c-spec,c-implement,c-prompt,c-loop,c-process,c-flow,c-design,c-review,c-refactor,c-lint,c-perf,c-debug,c-retro,c-skill} ~/.cursor/skills/.engineering-skills-version
 ```
 
 Đổi `~/.cursor/skills` thành thư mục của Claude, Antigravity, hoặc Codex nếu gỡ ở đó.
@@ -119,6 +119,8 @@ Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trư
 | Tìm lỗi. `--find` chỉ ra nguyên nhân. `--fix` sửa sau khi nguyên nhân đã được quote | `/c-debug` | `--find` có `CAUSE.md` và không sửa code sản phẩm. `--fix` có lệnh đỏ gốc chạy lại sau sửa |
 | Chưa rõ câu nói thuộc nhánh nào | `/c-route` | Đã chọn một hàng ở trên và làm theo skill đó |
 | Cài pack này vào IDE trên máy, hoặc kéo bản `VERSION` mới | `/c-install` | IDE bạn chọn có bản copy của skill |
+| Rút kinh nghiệm sau một phiên chạy | `/c-retro` | `work/retro/RETRO.md` có danh sách ứng viên đã được duyệt |
+| Viết hoặc sửa skill, `AGENTS.md`, hay tài liệu cho agent đọc | `/c-skill` | Mô tả có một trigger mỗi nhánh, không ý nào lặp hai nơi |
 
 `/c-agents` là luật nội bộ. Skill đang làm việc tự đọc nó khi chia subagent. Bạn không cần gõ, trừ khi muốn xem ai đang giữ file nào.
 

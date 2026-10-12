@@ -1,5 +1,6 @@
 ---
 name: c-process
+disable-model-invocation: true
 description: >-
   Use when the user types /c-process with a feature, bug, or idea. This is the
   short command for c-flow. The words after /c-process are the request.

@@ -36,7 +36,7 @@ Read and follow `test-driven-development` for the slice. Code written before the
 
 The implementer writes `work/{slug}/agents/{id}.md` from `templates/report.md`, and does not write a verdict.
 
-`DONE` with an empty RED is not `DONE`. `BLOCKED` means the task cannot be finished: the plan needs an architectural choice, or the code does not match the row. `NEEDS_CONTEXT` means a field the row should have carried is missing. Concerns do not change Status. The message back to the parent is the Status line and this path. The outputs stay in the file. The implementer does not commit.
+`DONE` with an empty RED is not `DONE`. `DONE_WITH_CONCERNS` means the task is finished and part of it is in doubt. `BLOCKED` means the task cannot be finished: the plan needs an architectural choice, or the code does not match the row. `NEEDS_CONTEXT` means a field the row should have carried is missing. Never report `DONE` on work you are unsure of, and never hide a doubt to keep the status `DONE`. The message back to the parent is the Status line and this path. The outputs stay in the file. The implementer does not commit.
 
 ## Check
 

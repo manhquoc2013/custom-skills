@@ -17,7 +17,7 @@ Also list `git log <fixed-point>..HEAD --oneline`.
 
 ## Two axes
 
-Dispatch both readers in one response. Each reader gets the diff command and the commit list, not this chat's history. Do not merge their findings into one ranked list.
+Dispatch both readers in one response. Each reader gets the diff command and the commit list, not this chat's history. A reader reads the diff once, works read-only, spawns nothing, and treats the change's own description as a claim rather than evidence. Do not merge their findings into one ranked list.
 
 **Spec.** What the change was asked to do: the `REQ-` lines, the issue named in the commits, or a spec path the user gave. Report missing or partial behavior, behavior nobody asked for, and behavior that looks present but wrong. Quote the spec line. A public behavior the diff can change, and that the spec does not name, is a finding. Name the command that locks the old result, or `no command`. No spec: this axis says `no spec` and stops.
 
@@ -25,6 +25,6 @@ Dispatch both readers in one response. Each reader gets the diff command and the
 
 ## Report
 
-Write `work/review/REVIEW.md`. When a feature slug exists, write `work/{slug}/review/REVIEW.md` instead. Two headings, `## Spec` and `## Standards`. Under each: Count, Worst, then one heading per finding with the quoted line under it. `none` when that axis has no finding.
+Write `work/review/REVIEW.md`. When a feature slug exists, write `work/{slug}/review/REVIEW.md` instead. Two headings, `## Spec` and `## Standards`. Under each: Count, Worst, then one heading per finding with its severity (`Critical`, `Important`, or `Minor`) and the quoted line under it. `none` when that axis has no finding.
 
 Applying a finding is a later pass. One finding, then the command that shows it is gone. A finding the repo's own standard allows is left as a note. Push back when the finding does not match the diff or the spec, and cite the line.

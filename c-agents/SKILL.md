@@ -47,7 +47,7 @@ These rules apply when the row matches. A missing plugin does not skip them. If 
 | User asks to lint, typecheck, or clear tool warnings | Run the repo's own command. Fix only the lines it printed. | `c-lint` |
 | User asks to make a path faster | Record one measurement, change that path once, measure the same command again. | `c-perf` |
 | About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. When the diff can change a behavior that is not the claimed one, quote that behavior's prior result and the command that still matches it. A green suite does not replace that quote. | `verification-before-completion` |
-| Branch is ready to merge or open a PR | The suite is green in this turn. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
+| Branch is ready to merge or open a PR | The suite is green in this turn. Confirm the base branch before merging, since merging into the wrong base is expensive to undo. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
 
 ## Claiming done
 
@@ -100,7 +100,7 @@ The pack's harness files live in `references/`, one per harness. Read yours when
 
 ## Dispatch
 
-Rows with disjoint files go out in one response. Follow the parallel-worker floor. Each prompt contains only that row's task, `owns` list, and done check — build it from `templates/dispatch-implementer.md`, and the verifier's from `templates/dispatch-verifier.md`. The worker writes `work/{slug}/agents/{id}.md`, or `work/agents/{id}.md` when there is no slug, with the files it touched and the command output. It does not write the verdict.
+Rows with disjoint files go out in one response. Follow the parallel-worker floor. Each prompt contains only that row's task, `owns` list, and done check — build it from `templates/dispatch-implementer.md`, the verifier's from `templates/dispatch-verifier.md`, and a fix round's from `templates/dispatch-re-review.md`. The worker writes `work/{slug}/agents/{id}.md`, or `work/agents/{id}.md` when there is no slug, with the files it touched and the command output. It does not write the verdict.
 
 Give every row an explicit model or workload tier. An omitted one silently inherits this session's model, usually the most expensive. `mechanical` for a one-line edit or running a named command; `standard` for a task with a file list and a done check; `reasoning` for multi-file work or a design call; `critical` only for a subtle bug or an irreversible change. Plan text that already contains the code to write is transcription plus testing: take the cheapest tier. Turn count beats token price — a too-cheap model costs more in extra turns than it saves.
 

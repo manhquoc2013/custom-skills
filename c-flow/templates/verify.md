@@ -18,6 +18,10 @@ The whole-feature verification record, written at the verify gate. Read it to se
 ### Next
 <the next action: ship, or the repair this verdict needs>
 
+## Build
+Command: <the repo's build or typecheck command>
+Output: <its output, or `no build command in this repo`>
+
 ## Requirements
 ### REQ-1
 Expected: <quoted from CONTEXT>

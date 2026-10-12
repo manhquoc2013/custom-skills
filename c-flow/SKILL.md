@@ -87,6 +87,10 @@ The first round includes every item below that the user has not already answered
 
 A question that depends on an answer still open in this round waits until the next round. After the user answers, recompute the frontier. A silent assumption is an open decision. Ask it.
 
+Play back as you go. As soon as one part is understood well enough to describe — what it is for and who it serves, or how one piece behaves — describe that part back in two or three sentences, then return to questions about the next part. Playback and questions alternate. Mark every guess as a guess: only what the user said goes into `CONTEXT.md`, and your inference goes in as an open decision.
+
+Ask openly first; offer a short menu only when the user is stuck. Ask about anti-goals too — what would make this a failure even if it technically works — because that answer shapes `Failure` and `Out of scope` more than the goals do. When looking would settle a question, offer to look — the code call, the repo, the file — and say what you would look for; the user decides.
+
 When the frontier is empty, show one line per behavior:
 
 ```text
@@ -109,9 +113,13 @@ Write `work/{slug}/CONTEXT.md` from `templates/context.md`. Every heading is fil
 | plan | `c-spec` writes research and `PLAN.md` | Plan check below passes |
 | execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
 | verify | `VERIFICATION.md` | Verdict is `PASS` (`## Verify` below) |
-| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the suite command was run in this turn |
+| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the repo's full check ran in this turn |
 
 A green suite never fills a Kept row.
+
+The full check is two commands, not one: the repo's own test command, and its build or typecheck command when that is separate. Find both in the manifest (`package.json`, `Makefile`, `pyproject.toml`, `Cargo.toml`), run both in the turn that claims them, and record both with their output. A linter is not the compiler: a green lint never stands in for a build. When the repo has no build or typecheck command, say so in `VERIFICATION.md` rather than leaving it implied.
+
+Before the first edit of the execute phase, check the branch. On the repo's default branch, create a branch first — or an isolated worktree when the harness has one — and say which you are on. Work on the default branch only when the user has asked for it.
 
 On a wave `PASS`, the parent commits each passing task, or writes its commit message in `IMPLEMENT.md` when this session cannot commit. Set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
 
@@ -145,15 +153,17 @@ Reject `PLAN.md` before any execute when a `REQ-` id has no task, a `REQ-` id is
 
 ## Logic check
 
-The verifier for that task writes `work/{slug}/checks/{task}.md`, from `templates/check.md`. The implementer does not. The verdict follows the command output.
+The verifier for that task writes `work/{slug}/checks/{task}.md`, from `templates/check.md`. The implementer does not. The verdict follows the command output. Every finding the verifier reports carries a severity: Critical, Important, or Minor.
 
 `REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. Otherwise `PASS`.
+
+A `Minor` finding is a note in the check; on its own it does not make the verdict `REJECT`. On `REJECT`, the parent re-dispatches that implementer with the finding list, then dispatches a re-review from `c-agents/templates/dispatch-re-review.md`, scoped to those findings and the fix diff — never a fresh full review.
 
 ## Verify
 
 Write `work/{slug}/VERIFICATION.md` from `templates/verify.md`.
 
-`PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite with a gap is `REJECT`.
+`PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite with a gap is `REJECT`. The full check's test and build commands must both appear in `VERIFICATION.md` with their output; one of them missing is a gap.
 
 ## Stop
 

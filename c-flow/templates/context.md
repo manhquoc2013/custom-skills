@@ -47,7 +47,8 @@ The frozen design record for a feature. Read it to see what was agreed and what 
 <that command's output before this work>
 
 ## Verify
-<the command a full pass runs>
+Test command: <the repo's test command>
+Build command: <the repo's build or typecheck command, or none>
 <what a pass looks like>
 
 ## Source

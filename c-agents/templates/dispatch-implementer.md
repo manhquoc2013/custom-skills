@@ -8,7 +8,7 @@ Read this only when you are about to dispatch one worker row. The prompt carries
 Task: <the task id, and one sentence: what this row does>
 Owns: <one path per line>
 REQ: <the REQ id, or none>
-Done check: <the command to run, and what a pass looks like>
+Done check: <the command to run, and what a pass looks like. Include the repo's build or typecheck command when it has one>
 Leave alone: <paths and behaviors outside this row, or none>
 Follow: <the skills named in the Floor row for this task, or none>
 

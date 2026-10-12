@@ -4,9 +4,11 @@
 
 One implementer's report for one task. Read it to see what the implementer changed and what it proved. It carries evidence, never a verdict. This file is the full record; the message back to the parent is at most 15 lines.
 
+`DONE_WITH_CONCERNS` is the honest middle: the task is finished and part of it is in doubt. Never report `DONE` on work you are unsure of, and never hide a doubt in `Concerns` to keep the status `DONE`.
+
 ```markdown
 ## Status
-<DONE | BLOCKED | NEEDS_CONTEXT>
+<DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT>
 
 ## Progress
 ### Now
@@ -37,5 +39,5 @@ Output:
 <the signature this task exports, or none>
 
 ## Concerns
-<what may be wrong or out of scope, one line each, or none>
+<what may be wrong or unproven, one line each, or none>
 ```
