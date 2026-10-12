@@ -48,7 +48,7 @@ Follow the Floor section of `c-agents` at every matching row. That floor is the 
 | discuss, after the `REQ-` list is confirmed | Behavior is not approved yet |
 | plan | Multi-step work has no plan yet |
 | first execute | About to edit the tree for a feature |
-| each wave | Two or more workers, then synthesize below |
+| each wave | Two or more workers, then synthesize the wave |
 | inside each subagent | About to write production code |
 | after implementers return | A worker just returned. One verifier per task, plus one watcher, in the same response |
 | a hard bug, or a `REJECT` whose command does not name the line to edit | A hard bug: the red command does not name the line to edit, and it is not a new test waiting for its behavior |
@@ -71,99 +71,30 @@ At the start of the first execute, before any edit, set `Base` to `git rev-parse
 
 Rewrite this file at the start and end of every gate. The first write sets `Phase` to `discuss` and `Stop` to `needs-human` until the intake is done.
 
-## Grill
-
-Run this before research, plan, or code. One call keeps asking until nothing is left assumed.
-
-Look up facts with the Lookup section above: glossary, ADRs, one MCP call, the test command, screen names. Do not ask the user for a fact that call can read. When the code contradicts the user, say so and ask which is right.
-
-A fuzzy term gets one precise candidate. When it clashes with the glossary, ask which meaning stands. When a relationship is fuzzy, test it with one concrete scenario and ask if that case holds. When a term is settled, add `Term: meaning` to `GLOSSARY.md` then. If `GLOSSARY-MAP.md` exists, write the term in the glossary that map names for this area. A glossary line is a meaning, not an implementation note.
-
-Write an ADR only when the decision is hard to reverse, surprising without this context, and a real trade-off. Otherwise do not write one.
-
-The frontier is every decision you can ask now without guessing an answer you have not heard. Ask that whole frontier in one round, then wait. Follow the Questions section of `c-agents`: one letter per proposal, and the last choice is `Người dùng quyết định`.
-
-The first round includes every item below that the user has not already answered: what is true when this is finished, who does it, the main path and its input, the failure or empty or forbidden case, what this work will not do, how to verify it, and the source doc or that this prompt is the only source. A screen adds which screen and which visual system, or none. A bug adds how to reproduce it and the actual result versus the expected result.
-
-A question that depends on an answer still open in this round waits until the next round. After the user answers, recompute the frontier. A silent assumption is an open decision. Ask it.
-
-Play back as you go. As soon as one part is understood well enough to describe — what it is for and who it serves, or how one piece behaves — describe that part back in two or three sentences, then return to questions about the next part. Playback and questions alternate. Mark every guess as a guess: only what the user said goes into `CONTEXT.md`, and your inference goes in as an open decision.
-
-Ask openly first; offer a short menu only when the user is stuck. Ask about anti-goals too — what would make this a failure even if it technically works — because that answer shapes `Failure` and `Out of scope` more than the goals do. When looking would settle a question, offer to look — the code call, the repo, the file — and say what you would look for; the user decides.
-
-When the frontier is empty, show one line per behavior:
-
-```text
-REQ-1
-<what happens>
-<what you should see>
-```
-
-When the request is several independent subsystems, stop. Name the pieces, ask which is first, and grill only that piece.
-
-Wait until the user says the list is complete and the understanding is shared. Then follow the design floor: write 2–3 approaches, the recommendation, and the accepted design into `work/{slug}/CONTEXT.md`. A one-behavior change still gets a few sentences and a yes. Set `Stop` to `none` only after that yes. Do not start plan before it. An empty frontier item, a missing approach choice, or no confirmation keeps `Stop` at `needs-human`.
-
-Write `work/{slug}/CONTEXT.md` from `templates/context.md`. Every heading is filled before plan. `Kept` is `none` only when this work creates the seam. After the user accepts the approach, Requirements, Failure, Out of scope, and Kept are frozen. Plan and research do not change those four. A new `REQ-` or a smaller Out of scope sets `Stop` to `needs-human`.
-
 ## Gates
 
 | Phase | Write | Advance when |
 |-------|--------|----------------|
 | discuss | `CONTEXT.md` with every heading filled, a user-confirmed `REQ-` list, and the accepted approach. A screen also follows `c-design` | The user has confirmed the requirement list and accepted one approach |
-| plan | `c-spec` writes research and `PLAN.md` | Plan check below passes |
+| plan | `c-spec` writes research and `PLAN.md` | Plan check passes |
 | execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
-| verify | `VERIFICATION.md` | Verdict is `PASS` (`## Verify` below) |
+| verify | `VERIFICATION.md` | Verdict is `PASS` |
 | ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the repo's full check ran in this turn |
+
+Each phase has a file beside this one, holding the detail that only that phase needs. Read it when the phase starts, and read no other phase file:
+
+| Before | Read |
+|--------|------|
+| asking the first frontier question — the Grill section | `phases/grill.md` |
+| the plan gate | `phases/plan.md` |
+| the first dispatch of a wave | `phases/execute.md` |
+| writing `VERIFICATION.md` or a check file | `phases/verify.md` |
 
 A green suite never fills a Kept row.
 
 The full check is two commands, not one: the repo's own test command, and its build or typecheck command when that is separate. Find both in the manifest (`package.json`, `Makefile`, `pyproject.toml`, `Cargo.toml`), run both in the turn that claims them, and record both with their output. A linter is not the compiler: a green lint never stands in for a build. When the repo has no build or typecheck command, say so in `VERIFICATION.md` rather than leaving it implied.
 
 Before the first edit of the execute phase, check the branch. On the repo's default branch, create a branch first — or an isolated worktree when the harness has one — and say which you are on. Work on the default branch only when the user has asked for it.
-
-On a wave `PASS`, the parent commits each passing task, or writes its commit message in `IMPLEMENT.md` when this session cannot commit. Set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
-
-## Roster
-
-Read and follow `c-agents`. For this skill the worker role is `implementer`. A wave's rows are one implementer per task, one verifier per implementer, and one watcher. Put the `REQ-` id in the task cell. Two implementers do not share a `REQ-` or a file. If they would, split the wave before dispatching.
-
-## Dispatch
-
-Read and follow `dispatching-parallel-agents`. Dispatch every `running` implementer in the wave in one response. Each prompt contains only that row: the quoted `REQ-` line, the owned files, the kept command and its quoted prior result, the produces line, the change, and the verify command, plus the order to follow `test-driven-development` and `c-implement`. It does not paste `CONTEXT.md` or any other task. The prompt says the implementer edits owned files only and writes `work/{slug}/agents/{id}.md` with the Report sections of `c-implement`. It does not write the verdict, and it does not commit.
-
-Read each report before dispatching a verifier. `BLOCKED` or `NEEDS_CONTEXT` sets `Stop` to `needs-human` and does not add to `Attempt`. A concern that names a wrong result or a behavior outside the row is the same stop. A concern that only names a large file still goes to the verifier. `DONE` with an empty RED is a `REJECT`: add 1 to `Attempt` and re-dispatch that task. The re-dispatch prompt quotes `Breaks` and the failed output from `checks/{task}.md` when that file exists. It does not include the previous implementer's reasoning.
-
-When every remaining report is `DONE` with a RED section, set those rows to `returned`. In the next response, dispatch every verifier for those tasks and the wave watcher together.
-
-The verifier is a new subagent, not a continuation of the implementer. It follows `requesting-code-review` and `verification-before-completion`. It re-runs the verify command and each kept command, quotes the expected result from the `REQ-` line and the prior result for each Kept row, and writes `work/{slug}/checks/{task}.md` with the Logic check sections. A file outside that task's `owns` cell is a `REJECT`.
-
-The watcher reads the roster and every `agents/{id}.md` for the wave. It writes `work/{slug}/waves/{wave}-watch.md`: each file touched, which implementer owned it, and any file touched by two implementers or by an implementer outside its `owns` cell.
-
-## Synthesize
-
-The parent writes `work/{slug}/waves/{wave}.md`, from `templates/wave.md`, only after the watcher and every verifier for that wave have returned.
-
-A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass` and Conflicts is empty. Then dispatch the next wave, or start verify.
-
-After discuss is locked, work on a feature branch. Unrelated dirty files set `Stop` to `needs-human`.
-
-## Plan check
-
-Reject `PLAN.md` before any execute when a `REQ-` id has no task, a `REQ-` id is on two tasks, a task has no `REQ-` id, no kept command, no produces line, or no verify command, two tasks in one wave edit the same file, a task covers more than one requirement, the plan adds work `CONTEXT.md` marked out of scope, or the plan changes a frozen Requirements, Failure, Out of scope, or Kept line. `none` is a kept command only when that seam has no public behavior yet. Also reject a placeholder (`TBD`, `TODO`, "similar to task N", "handle edge cases"), a task that consumes a name no earlier task produces, a same-wave dependency, a kept prior result that was not the output of that command in this plan turn, or a verify command that cannot show the expected result. Typecheck, lint, and an exit code alone do not show a behavior. A kept command of `none` while `RESEARCH.md` names a public behavior on those files is a reject. A record that joins fields with `|` is a reject.
-
-## Logic check
-
-The verifier for that task writes `work/{slug}/checks/{task}.md`, from `templates/check.md`. The implementer does not. The verdict follows the command output. Every finding the verifier reports carries a severity: Critical, Important, or Minor.
-
-`REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. Otherwise `PASS`.
-
-A `Minor` finding is a note in the check; on its own it does not make the verdict `REJECT`. On `REJECT`, the parent re-dispatches that implementer with the finding list, then dispatches a re-review from `c-agents/templates/dispatch-re-review.md`, scoped to those findings and the fix diff — never a fresh full review.
-
-## Verify
-
-Write `work/{slug}/VERIFICATION.md` from `templates/verify.md`.
-
-`PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite with a gap is `REJECT`. The full check's test and build commands must both appear in `VERIFICATION.md` with their output; one of them missing is a gap.
 
 ## Stop
 

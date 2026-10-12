@@ -46,31 +46,8 @@ These rules apply when the row matches. A missing plugin does not skip them. If 
 | User asks to refactor without a behavior change | Tests are green first. One candidate, then the same test command again. | `c-refactor` |
 | User asks to lint, typecheck, or clear tool warnings | Run the repo's own command. Fix only the lines it printed. | `c-lint` |
 | User asks to make a path faster | Record one measurement, change that path once, measure the same command again. | `c-perf` |
-| About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. When the diff can change a behavior that is not the claimed one, quote that behavior's prior result and the command that still matches it. A green suite does not replace that quote. | `verification-before-completion` |
+| About to claim pass, done, or fixed | The proving command was run in this turn. Quote the output. An earlier run, or "should pass", is not a pass. When the diff can change a behavior that is not the claimed one, quote that behavior's prior result and the command that still matches it. A green suite does not replace that quote. Read `references/done.md` and check the claim against both of its tables before you write it. | `verification-before-completion` |
 | Branch is ready to merge or open a PR | The suite is green in this turn. Confirm the base branch before merging, since merging into the wrong base is expensive to undo. Then offer a pull request, a merge, or leaving the branch. Denylist paths wait for a human. | `finishing-a-development-branch` |
-
-## Claiming done
-
-Before writing any claim of pass, done, or fixed, check it against this table. A row that matches is a stop, not a caveat to add.
-
-| Claim | Needs | Not enough |
-|-------|-------|------------|
-| The task passes | The done check run in this pass, output quoted | An earlier run, or "should pass" |
-| The suite is green | The kept command run in this pass | A green suite alone |
-| A bug is fixed | The original symptom re-run and passing | The code changed |
-| A regression test works | The red-green cycle seen | The test passing once |
-| A worker finished | The diff shows the changes | The worker's own "success" report |
-| Every requirement is met | A line-by-line checklist against the `REQ-` list | The tests passing |
-
-| Excuse | Reality |
-|--------|---------|
-| "Should work now" | Run it |
-| "I'm confident" | Confidence is not evidence |
-| "Just this once" | No exceptions |
-| "The linter passed" | The linter is not the compiler |
-| "The worker said success" | Read the diff |
-| "A partial check is enough" | A partial check proves nothing |
-| "I'm tired, ship it" | Exhaustion is not evidence |
 
 ## Records
 
