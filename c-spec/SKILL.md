@@ -23,18 +23,7 @@ When `c-flow` is the caller, `CONTEXT.md` is already locked. Do not ask again. D
 
 ## Fog — the map
 
-Name the destination in one or two lines (a spec, a decision, or a change). Write `work/maps/{slug}.md`:
-
-```markdown
-## Destination
-one or two lines
-## Decisions so far
-one decision per line, or none
-## Not yet specified
-one question per line, or none
-## Out of scope
-one item per line, or none
-```
+Name the destination in one or two lines (a spec, a decision, or a change). Write `work/maps/{slug}.md` from `templates/map.md`.
 
 Each open decision is its own note under `work/maps/{slug}/` with `## Question` and a type: research, prototype, grilling, or task. A question that cannot be phrased sharply stays under Not yet specified. Work past the destination goes under Out of scope.
 
@@ -50,59 +39,21 @@ Several independent subsystems are not one spec. Name the pieces, ask which is f
 
 Explore the code. Read `GLOSSARY.md` and the ADRs under `docs/adr/` that touch this area. Use those words. A new term goes into `GLOSSARY.md`. A decision later work must obey goes into `docs/adr/` as the next number. Prefer an existing public boundary for tests. Each seam line says what it catches and what it misses. Implementation decisions name modules and contracts, not file paths. Confirm the seams with the user before publishing.
 
-Write `work/{slug}/plan/SPEC.md`:
-
-```markdown
-## Problem statement
-## Solution
-## User stories
-### 1
-As a <actor>, I want <feature>, so that <benefit>.
-## Implementation decisions
-one decision per line
-## Testing decisions
-### seam
-Catches:
-Misses:
-## Out of scope
-## Seams
-### name
-Catches:
-Misses:
-```
+Write `work/{slug}/plan/SPEC.md` from `templates/spec.md`.
 
 One story is one outcome, not a chain of steps. Implementation decisions name modules, interfaces, schema, and API contracts. Leave out file paths and code. Testing decisions name the public behavior and the prior tests to copy. Publish to the issue tracker from `docs/agents/issue-tracker.md` when that file exists, labelled `ready-for-agent`.
 
 ## Open feature — research, then plan
 
-Create `work/{slug}/REQUEST.md` from the user's idea or source doc: goal, who it is for, constraints, and the source links.
+Create `work/{slug}/REQUEST.md` from `templates/request.md`.
 
-Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md`:
-
-```markdown
-## Value
-who is hurt if this ships or does not
-## Already
-### symbol
-File:
-Behavior:
-## Touches
-### behavior
-File:
-Symbol:
-## Approach
-build, reuse, or decline
-## Verdict
-GO, CONDITIONAL, or NO-GO
-## Condition
-the decision, or none
-```
+Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md` from `templates/research.md`.
 
 Every Already or Touches claim cites a file and a symbol. Do not invent an endpoint or a type. A Touches row with no citation is rejected. Do not change frozen Requirements, Failure, or Out of scope. When a Touches behavior is missing from Kept, append that Kept row only after its command has been run and the output quoted. No such command: set `Stop` to `needs-human`. Do not add a `REQ-`.
 
 Stop on NO-GO. State the reason and the smallest change that would reopen it.
 
-On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md` with every heading from the CONTEXT template in `c-flow`. A screen also follows `c-design` and writes `plan/ux.md`.
+On GO or an accepted CONDITIONAL, lock decisions before the plan. Write `work/{slug}/CONTEXT.md` with every heading from the CONTEXT template in `c-flow/templates/context.md`. A screen also follows `c-design` and writes `plan/ux.md`.
 
 Then write:
 
@@ -110,28 +61,7 @@ Then write:
 - `work/{slug}/plan/eng.md` — boundaries, data, contracts, seams
 - `work/{slug}/plan/PLAN.md` — tasks in waves
 
-Each task is one `REQ-` id:
-
-```markdown
-# PLAN
-## Goal
-one sentence quoted from CONTEXT
-## Frozen
-Requirements, Failure, Out of scope, and Kept, copied as labeled lines
-## Waves
-### Wave 1
-one sentence
-#### T1
-REQ: REQ-1
-Files: one path per line
-Consumes: signature, or none
-Produces: signature, or none
-Kept command:
-Kept result:
-Change: one sentence
-Verify command:
-Verify result: what a pass looks like
-```
+Each task is one `REQ-` id. Write `work/{slug}/plan/PLAN.md` from `templates/plan.md`.
 
 A task is one behavior with its own test cycle. Fold setup into the task that needs it. A setup-only line is not a task. Tasks in one wave must not edit the same file. A task without a verify command is not a task. A task whose files already exist names the command that locks each public behavior this diff can change. `none` is allowed only when that seam has no public behavior yet. The plan does not add work `CONTEXT.md` marked out of scope.
 

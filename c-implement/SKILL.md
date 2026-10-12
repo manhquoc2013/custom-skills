@@ -34,27 +34,7 @@ Read and follow `test-driven-development` for the slice. Code written before the
 
 ## Report
 
-The implementer writes `work/{slug}/agents/{id}.md` and does not write a verdict.
-
-```markdown
-## Status
-DONE, BLOCKED, or NEEDS_CONTEXT
-## RED
-Command:
-Output before the edit:
-## GREEN
-Command:
-Output:
-## Kept
-Command:
-Output:
-## Files
-one path per line
-## Produces
-the signature, or none
-## Concerns
-none, or one line each
-```
+The implementer writes `work/{slug}/agents/{id}.md` from `templates/report.md`, and does not write a verdict.
 
 `DONE` with an empty RED is not `DONE`. `BLOCKED` means the task cannot be finished: the plan needs an architectural choice, or the code does not match the row. `NEEDS_CONTEXT` means a field the row should have carried is missing. Concerns do not change Status. The message back to the parent is the Status line and this path. The outputs stay in the file. The implementer does not commit.
 

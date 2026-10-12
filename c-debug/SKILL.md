@@ -31,30 +31,7 @@ Redact secrets before showing any output. The user reports what they expected, w
 
 ## Find
 
-`--find` writes `work/debug/CAUSE.md` and stops.
-
-```markdown
-## Mode
-find
-## Symptom
-Expected:
-Actual:
-## Red command
-Command:
-Output:
-## Working
-the similar green path and the one difference, or none
-## Cause
-the site that first produced the bad value
-## Discarded
-### hypothesis
-Command:
-Output:
-## Seam
-where a regression test can fail on this symptom, or no seam
-## Next
-repair not started
-```
+`--find` writes `work/debug/CAUSE.md` from `templates/cause.md`, and stops.
 
 It may add the red command's test. It does not change production code. Delete every `[DEBUG-<id>]` line and every throwaway harness that is not that test.
 

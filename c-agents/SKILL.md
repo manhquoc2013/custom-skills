@@ -55,15 +55,7 @@ Any file this pack writes follows the Records section of `c-flow`. A heading is 
 
 ## Roster
 
-Write the roster before the first dispatch. Use `work/{slug}/roster.md` when a feature slug exists. Otherwise use `work/roster.md`. One heading per agent. Update `Status` when that agent is dispatched, when it returns, and when the verdict is in.
-
-```markdown
-## parent
-Role: coordinator
-Task: the skill name
-Owns: none
-Status: running
-```
+Write the roster before the first dispatch, from `templates/roster.md`. Use `work/{slug}/roster.md` when a feature slug exists, otherwise `work/roster.md`. One heading per agent. Update `Status` when that agent is dispatched, when it returns, and when the verdict is in.
 
 - **coordinator** assigns rows and does not do a worker's task.
 - **worker** has one task and one file list. Two workers do not share a task or a file. Its report status is `DONE`, `BLOCKED`, or `NEEDS_CONTEXT`. The parent does not send a `BLOCKED` or `NEEDS_CONTEXT` report to a verifier.

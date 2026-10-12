@@ -2,7 +2,7 @@
 
 Bộ skill cho Cursor. Agent hỏi đủ context, lập danh sách yêu cầu bạn xác nhận, rồi tự làm đến khi mỗi yêu cầu có kết quả lệnh khớp kết quả mong đợi.
 
-Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư mục chứa `SKILL.md`.
+Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư mục chứa `SKILL.md`. Hình dạng các file mà skill ghi ra nằm riêng trong thư mục `templates/` của skill, mỗi tài liệu một file, chỉ đọc đúng file sắp ghi nên không nằm trong ngữ cảnh mặc định khi load skill.
 
 ## Cài đặt
 
@@ -26,7 +26,7 @@ Cùng lệnh đó cài lại khi `VERSION` trên GitHub đổi. Thêm cờ bằn
 
 ### Trong thư mục repo
 
-Mỗi skill được chép thành một thư mục thật với `SKILL.md` là file thường. Sửa file trong repo chưa đổi bản đã cài. `--update` chép lại khi file `VERSION` đổi. Mở chat mới sau khi cài.
+Mỗi skill được chép thành một thư mục thật với `SKILL.md` là file thường (kèm thư mục `templates/` nếu có). Sửa file trong repo chưa đổi bản đã cài. `--update` chép lại khi file `VERSION` đổi. Mở chat mới sau khi cài.
 
 Enter cài mọi IDE tìm thấy. Hoặc nhập số, ví dụ `1,3`.
 

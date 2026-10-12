@@ -17,30 +17,7 @@ Detect the stack from the manifest. When it is ambiguous, ask with the Questions
 
 ## MASTER.md
 
-```markdown
-## Product
-type
-audience
-style words
-## Stack
-## Color
-one token per line
-a pair that meets 4.5:1, on its own line
-## Type
-family
-body 16px
-line-height 1.5
-## Space
-density
-one spacing step per line
-## Motion
-what moves
-the reduced-motion fallback
-## Reuse
-one existing component per line
-## Anti-patterns
-one rejected pattern per line
-```
+Write `design-system/MASTER.md` from `templates/master.md`.
 
 Match one style to the product. Keep icons as SVG with a text name. Put raw hex in the token file, and reference tokens from components.
 

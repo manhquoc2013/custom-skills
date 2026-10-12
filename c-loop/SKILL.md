@@ -53,23 +53,7 @@ Do not start at L2 or L3 because the user asked to "just fix it". Missing a requ
 
 `loop-run-log.md` — append one block per run: start time, items seen, actions, escalations, outcome (`no-op`, `report-only`, `fix-proposed`, `escalated`).
 
-`STATE.md` for that pattern:
-
-```markdown
-# STATE
-## Level
-## High priority
-### item
-Action:
-Attempts: 0
-## Watch
-none, or one item per heading
-## Waiting on human
-none, or one item per heading
-## Last run
-## Kill switch
-paused: false
-```
+`STATE.md` for that pattern, from `templates/state.md`:
 
 A heading that needs a paragraph is two items or an escalation. A run log entry is its own heading with Start, Seen, Actions, Escalations, and Outcome on separate lines. Every run reads this file first and deletes lines whose PR or issue is already closed.
 

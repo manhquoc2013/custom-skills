@@ -59,30 +59,11 @@ Files in `work/{slug}/` stay the authority. Save the design into `CONTEXT.md`. S
 
 A heading is the label. The next line is the value. One fact per line. Do not join fields with `|`. An empty section is the word `none`. A command is one line and its output is the next line. Write the chosen value, not the list of allowed values. One `REQ-` is one outcome. A sequence the user can pause between is more than one `REQ-`.
 
+The shape of every file below is in `templates/`, next to this file, one file per artifact. Read only the file you are about to write, and only at that moment, never while discussing, researching, or dispatching.
+
 ## State
 
-Read `work/{slug}/FLOW.md` before any edit. Create it when missing.
-
-```markdown
-# FLOW
-## Goal
-one sentence
-## Slug
-## Phase
-discuss, plan, execute, verify, ship, or done
-## Wave
-## Task
-## Base
-git SHA
-## Attempt
-0
-## Last verdict
-NONE, PASS, or REJECT
-## Stop
-none, needs-human, no-go, attempt-cap, or done
-## Note
-what changed, or none
-```
+Read `work/{slug}/FLOW.md` before any edit. Create it when missing, from `templates/flow.md`.
 
 At the start of the first execute, before any edit, set `Base` to `git rev-parse HEAD`. A Kept prior result is the kept command's output at that revision. An output taken after the edit is not a prior result. If that command's output no longer matches the quote in `PLAN.md`, set `Stop` to `needs-human`.
 
@@ -116,33 +97,7 @@ When the request is several independent subsystems, stop. Name the pieces, ask w
 
 Wait until the user says the list is complete and the understanding is shared. Then follow the design floor: write 2–3 approaches, the recommendation, and the accepted design into `work/{slug}/CONTEXT.md`. A one-behavior change still gets a few sentences and a yes. Set `Stop` to `none` only after that yes. Do not start plan before it. An empty frontier item, a missing approach choice, or no confirmation keeps `Stop` at `needs-human`.
 
-```markdown
-# CONTEXT
-## Goal
-## Actor
-## Requirements
-### REQ-1
-what happens
-what you should see
-## Approach
-### Accepted
-### Also considered
-one sentence each, or none
-## Failure
-## Out of scope
-## Kept
-### name
-what still happens
-command
-result before this work
-## Verify
-command
-what a pass looks like
-## Source
-doc path, or this prompt
-```
-
-Every heading is filled before plan. `Kept` is `none` only when this work creates the seam. After the user accepts the approach, Requirements, Failure, Out of scope, and Kept are frozen. Plan and research do not change those four. A new `REQ-` or a smaller Out of scope sets `Stop` to `needs-human`.
+Write `work/{slug}/CONTEXT.md` from `templates/context.md`. Every heading is filled before plan. `Kept` is `none` only when this work creates the seam. After the user accepts the approach, Requirements, Failure, Out of scope, and Kept are frozen. Plan and research do not change those four. A new `REQ-` or a smaller Out of scope sets `Stop` to `needs-human`.
 
 ## Gates
 
@@ -174,29 +129,7 @@ The watcher reads the roster and every `agents/{id}.md` for the wave. It writes 
 
 ## Synthesize
 
-The parent writes `work/{slug}/waves/{wave}.md` only after the watcher and every verifier for that wave have returned.
-
-```markdown
-## Verdict
-PASS or REJECT
-
-## Tasks
-### T1
-Role:
-REQ:
-Owns:
-Status:
-REQ command:
-REQ output:
-Kept command:
-Kept output:
-
-## Conflicts
-none, or one file per line
-
-## Next
-next wave id, or verify
-```
+The parent writes `work/{slug}/waves/{wave}.md`, from `templates/wave.md`, only after the watcher and every verifier for that wave have returned.
 
 A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass`, Conflicts is empty, every actual output matches the quoted `REQ-` result, and every Kept output matches its quoted prior result. Then dispatch the next wave, or start verify.
 
@@ -208,60 +141,13 @@ Reject `PLAN.md` before any execute when a `REQ-` id has no task, a `REQ-` id is
 
 ## Logic check
 
-The verifier for that task writes `work/{slug}/checks/{task}.md`. The implementer does not. The verdict follows the command output.
-
-```markdown
-## Verdict
-PASS or REJECT
-
-## Branches
-one condition, or none
-
-## Evidence
-### branch name
-Input:
-Expected: quoted from that REQ
-Command:
-Output:
-
-## Kept
-### name
-what still happens
-command
-output
-## Outside
-none, or one hunk per line
-
-## Breaks
-none, or one miss per line
-```
+The verifier for that task writes `work/{slug}/checks/{task}.md`, from `templates/check.md`. The implementer does not. The verdict follows the command output.
 
 `REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. The verdict is `PASS` only when Breaks is empty, Outside is empty, and every Kept output matches. A green suite does not fill a Kept row.
 
 ## Verify
 
-```markdown
-## Verdict
-PASS or REJECT
-
-## Requirements
-### REQ-1
-Expected: quoted from CONTEXT
-Command:
-Output:
-
-## Kept
-### name
-Prior result:
-Command:
-Output:
-
-## Outside
-none, or one behavior per line
-
-## Gaps
-none, or one missing id per line
-```
+Write `work/{slug}/VERIFICATION.md` from `templates/verify.md`.
 
 A green suite with a gap is `REJECT`. `PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite does not fill a Kept row.
 
