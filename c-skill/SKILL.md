@@ -1,6 +1,7 @@
 ---
 name: c-skill
 disable-model-invocation: true
+argument-hint: [skill | AGENTS.md | tài liệu]
 description: >-
   Writing or editing a skill, an AGENTS.md, or any document an agent reads.
 ---

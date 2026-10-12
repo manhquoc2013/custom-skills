@@ -10,7 +10,7 @@ description: >-
 
 A loop replaces the human as the prompter. It discovers work, assigns it, checks the result, and writes state. Week one reports. It does not merge. A question to the user follows the Questions section of `c-agents`.
 
-A loop is a recurring trigger plus state. A feature finished in this session is `c-flow`, not this skill.
+A loop is a recurring trigger plus state.
 
 ## Pick one pattern
 
@@ -86,6 +86,8 @@ Exit immediately when the kill switch is paused or the daily cap is spent. At ab
 ## Pattern rules
 
 - **CI sweeper.** Classify each failure as flake, regression, or infra. A flake (failed, then passed with no code change) goes to Watch. Infra goes to Waiting on human. Only a regression may get a minimal fix, and only at L2.
+- **Daily triage.** Read the day's new items and the state of CI. One line per item into High priority or Watch. Report only; it does not touch the repo.
+- **PR babysitter.** Watch each open PR. Classify a red check before any fix, and leave a check that also fails on the default branch to CI sweeper.
 - **Issue triage.** One category, `bug` or `enhancement`, and one state: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Reproduce a bug before `ready-for-agent`. That state gets an agent brief: current behavior, desired behavior, acceptance checks, and out of scope. Name contracts, not file paths or line numbers. L1 does not label or close. Already implemented is `wontfix` with a pointer to where it lives.
 - **Dependency sweeper.** Patch updates only. Majors, lockfile-wide bumps, and anything on the denylist escalate.
 - **Changelog drafter.** Draft only.

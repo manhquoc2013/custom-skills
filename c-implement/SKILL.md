@@ -8,7 +8,7 @@ description: >-
 
 # Implementing from a spec
 
-The plan is the scope. A session implements one task, then a separate check decides pass or fail. Chat memory is not.
+The plan is the scope. A session implements one task, then a separate check decides pass or fail.
 
 ## Load
 

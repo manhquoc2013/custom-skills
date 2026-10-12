@@ -1,6 +1,7 @@
 ---
 name: c-process
 disable-model-invocation: true
+argument-hint: [feature | bug | ý tưởng]
 description: >-
   Short command for `c-flow`: the words after `/c-process` are the request.
 ---

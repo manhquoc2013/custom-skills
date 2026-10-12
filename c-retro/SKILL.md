@@ -1,6 +1,7 @@
 ---
 name: c-retro
 disable-model-invocation: true
+argument-hint: [phiên | feature]
 description: >-
   Retro after a session or a feature run. Proposes changes to the repo's
   environment, not the code.

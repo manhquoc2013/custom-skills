@@ -19,7 +19,7 @@ If your harness has a file, read it in `c-agents/references/` for the exact call
 
 With no file for your harness, reach the codegraph server through your harness's own MCP discovery, then call `codegraph_explore` with the user's words (the symbol, the screen, the behavior). One call. Then ask the frontier and stop.
 
-Grep, ripgrep, SemanticSearch, and a line that says `Searched <word>` are not that call. Shell `find`, `ls`, and `head` are not that call. If you already used one, stop and make the MCP call before any other search.
+Grep, ripgrep, SemanticSearch, shell `find`, `ls`, `head`, and a line that says `Searched <word>` are not that call. If you already used one, stop and make the MCP call before any other search.
 
 Stay inside the open workspace. Do not search the parent of that repo.
 
