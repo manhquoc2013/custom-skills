@@ -258,6 +258,11 @@ offer_recommended() {
   fi
   if ! print_recommended >/dev/null; then
     echo "Skill bổ sung đã có trên máy, không cài lại."
+    local dest
+    for dest in "$@"; do
+      dest="${dest%$'\r'}"
+      awk -F'|' '$1 !~ /^#/ && $1 != "" { print $1 }' "$manifest" | tr -d '\r' > "$HOME/$dest/.engineering-skills-extras"
+    done
     return 0
   fi
   if [[ ! -t 0 ]]; then

@@ -187,6 +187,10 @@ function Offer-Recommended($rels) {
   $pending = @((Read-Bundles) | Where-Object { @(Get-MissingNames $_.Paths).Count -gt 0 })
   if ($pending.Count -eq 0) {
     Write-Output "Skill bổ sung đã có trên máy, không cài lại."
+    $ids = (Read-Bundles | ForEach-Object { $_.Id }) -join "`n"
+    foreach ($rel in $rels) {
+      Set-Content -Path (Join-Path (Join-Path $env:USERPROFILE $rel) ".engineering-skills-extras") -Value $ids
+    }
     return
   }
   Write-Output "Nên cài thêm. Pack này đọc chúng khi có trên máy:"
