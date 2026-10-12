@@ -55,13 +55,12 @@ A `.md` file written on Windows should end CRLF in the working tree. Git warns `
 
 ## Editing the skills
 
-Read `c-skill/SKILL.md` before changing any skill body, and `c-agents/SKILL.md` before changing how skills split work. Four rules, each of which has already been violated once:
+Read `c-skill/SKILL.md` before changing any skill body, and `c-agents/SKILL.md` before changing how skills split work. Five rules, each of which has already been violated once:
 
 1. **Section names are a contract.** `c-process`, `c-spec`, and `c-implement` point at named sections of `c-flow` — "the Grill section", "the plan check". Renaming or moving a section without updating every pointer leaves a dangling reference. Grep for the name before you move it.
 2. **Keep the frontmatter.** Dropping a `SKILL.md` frontmatter block silently unregisters that skill; it disappears from the agent's skill list. Easy to lose when rewriting a whole file — read `git diff` for a line that starts with `-name:`.
 3. **`VERSION` drives `--update`.** An installed copy is recopied only when its version differs from this file. Bump it for anything users should receive.
 4. **One change ships to four harnesses.** Prefer wording that is neutral between them over a mechanism only one supports — for example Claude Code's `paths:` lazy-load frontmatter.
-
 5. **One story, one home.** When the same fact lives in more than one file, one file is the source and the others point at it or summarise it. Change the source first, then propagate. The install story's home is `c-install/SKILL.md`, which carries every flag; `README.md` and the Commands section above are summaries of it. The harness list's home is `c-agents/SKILL.md`.
 
 ## Committing
