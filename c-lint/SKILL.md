@@ -3,7 +3,6 @@ name: c-lint
 description: >-
   Use when the user asks to lint, typecheck, fix warnings, or check logic
   the tools can show. Use for "lint", "sửa warning", "typecheck", "soi logic".
-  Do not add a formatter or a git hook unless they asked for that hook.
 ---
 
 # Checking lint

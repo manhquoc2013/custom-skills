@@ -20,7 +20,7 @@ Read `GLOSSARY.md` and the ADRs under `docs/adr/` for that area. Use those names
 
 A candidate is one shallow spot: understanding it means jumping across many files, or the interface is as large as the body. Say what would be deleted or inlined, which calls stay, and which tests already cover the behavior.
 
-Write the list to `work/refactor/CANDIDATES.md`. One heading per candidate, then what would be deleted or inlined, which calls stay, and which tests already cover the behavior. More than one candidate goes in one question form. A is the hottest recent area and ends with `(Recommended)`. The last choice is `Người dùng quyết định`. Wait for that answer before editing.
+Write the list to `work/refactor/CANDIDATES.md`. One heading per candidate. More than one candidate goes in one question form. A is the hottest recent area and ends with `(Recommended)`. The last choice is `Người dùng quyết định`. Wait for that answer before editing.
 
 ## One pass
 

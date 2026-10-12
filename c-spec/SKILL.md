@@ -49,7 +49,7 @@ Create `work/{slug}/REQUEST.md` from `templates/request.md`.
 
 Read `REQUEST.md` and any project principles. If a requirement is ambiguous, stop and ask. Then write `work/{slug}/research/RESEARCH.md` from `templates/research.md`.
 
-Every Already or Touches claim cites a file and a symbol. Do not invent an endpoint or a type. A Touches row with no citation is rejected. Do not change frozen Requirements, Failure, or Out of scope. When a Touches behavior is missing from Kept, append that Kept row only after its command has been run and the output quoted. No such command: set `Stop` to `needs-human`. Do not add a `REQ-`.
+Every Already or Touches claim cites a file and a symbol. Do not change frozen Requirements, Failure, or Out of scope. When a Touches behavior is missing from Kept, append that Kept row only after its command has been run and the output quoted. No such command: set `Stop` to `needs-human`. Do not add a `REQ-`.
 
 Stop on NO-GO. State the reason and the smallest change that would reopen it.
 

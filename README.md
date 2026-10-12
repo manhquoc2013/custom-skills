@@ -2,7 +2,7 @@
 
 Bộ skill cho Cursor. Agent hỏi đủ context, lập danh sách yêu cầu bạn xác nhận, rồi tự làm đến khi mỗi yêu cầu có kết quả lệnh khớp kết quả mong đợi.
 
-Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư mục chứa `SKILL.md`. Hình dạng các file mà skill ghi ra nằm riêng trong thư mục `templates/` của skill, mỗi tài liệu một file, chỉ đọc đúng file sắp ghi nên không nằm trong ngữ cảnh mặc định khi load skill.
+Skill nằm ở thư mục gốc của repo này. Mỗi skill là một thư mục chứa `SKILL.md`. Hình dạng các file mà skill ghi ra nằm riêng trong thư mục `templates/` của skill, mỗi tài liệu một file, chỉ đọc đúng file sắp ghi nên không nằm trong ngữ cảnh mặc định khi load skill. Phần đặc thù harness nằm trong một file dùng chung `c-agents/references/cursor.md`, mọi skill trỏ về đó, chỉ đọc khi đúng harness đang chạy.
 
 ## Cài đặt
 

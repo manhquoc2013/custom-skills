@@ -3,7 +3,6 @@ name: c-perf
 description: >-
   Use when the user asks to speed something up, cut latency, or improve
   performance. Use for "cho nhanh hơn", "tối ưu perf", "giảm thời gian".
-  No change before a measured baseline.
 ---
 
 # Improving performance

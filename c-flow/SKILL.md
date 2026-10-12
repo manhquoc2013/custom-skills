@@ -13,9 +13,13 @@ The first turn of a new request ends with the frontier questions. It does not ed
 
 ## Lookup
 
-The first lookup is the MCP tool `codegraph_explore`. It often does not show up as a normal function. That is not absence. Do not say it is missing, lazy, or unregistered until you have looked it up.
+The first lookup is the MCP tool `codegraph_explore`. It often does not show up as a normal function, because most harnesses expose MCP tools through a discovery call rather than as named functions. That is not absence. Do not say it is missing, lazy, or unregistered until you have looked it up.
 
-On Cursor, call `GetDynamicTools` for the codegraph namespace, then `CallDynamicTool` with tool name `codegraph_explore`. Pass the user's words (the symbol, the screen, the behavior). One call. Then ask the frontier and stop.
+If your harness has a file, read it for the exact calls. It is the only harness-specific part of this section, and the pack keeps exactly one, shared, in `c-agents`.
+
+- Cursor: `c-agents/references/cursor.md`
+
+With no file for your harness, reach the codegraph server through your harness's own MCP discovery, then call `codegraph_explore` with the user's words (the symbol, the screen, the behavior). One call. Then ask the frontier and stop.
 
 Grep, ripgrep, SemanticSearch, and a line that says `Searched <word>` are not that call. Shell `find`, `ls`, and `head` are not that call. If you already used one, stop and make the MCP call before any other search.
 
@@ -106,8 +110,10 @@ Write `work/{slug}/CONTEXT.md` from `templates/context.md`. Every heading is fil
 | discuss | `CONTEXT.md` with every heading filled, a user-confirmed `REQ-` list, and the accepted approach. A screen also follows `c-design` | The user has confirmed the requirement list and accepted one approach |
 | plan | `c-spec` writes research and `PLAN.md` | Plan check below passes |
 | execute | One subagent per task in the current wave, dispatched together | The wave synthesis file is `Verdict: PASS` |
-| verify | `VERIFICATION.md` | Every `REQ-` id matches, every Kept row matches its prior result, and Gaps and Outside are empty |
-| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the suite command was run in this turn. The suite does not fill a Kept row |
+| verify | `VERIFICATION.md` | Verdict is `PASS` (`## Verify` below) |
+| ship | PR link, or the commit message left in `IMPLEMENT.md`, plus a brief in `FLOW.md` Note: what changed, why, and the link | Verify verdict is PASS, and the suite command was run in this turn |
+
+A green suite never fills a Kept row.
 
 On a wave `PASS`, the parent commits each passing task, or writes its commit message in `IMPLEMENT.md` when this session cannot commit. Set `Attempt` to 0 and dispatch the next wave. After the last wave passes, start verify. On `REJECT`, stay on that task, add 1 to `Attempt`, and re-dispatch only the failing task. At attempt 3, set `Stop` to `attempt-cap`.
 
@@ -131,7 +137,7 @@ The watcher reads the roster and every `agents/{id}.md` for the wave. It writes 
 
 The parent writes `work/{slug}/waves/{wave}.md`, from `templates/wave.md`, only after the watcher and every verifier for that wave have returned.
 
-A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass`, Conflicts is empty, every actual output matches the quoted `REQ-` result, and every Kept output matches its quoted prior result. Then dispatch the next wave, or start verify.
+A subagent's own PASS sentence is not the verdict. Overlap or an edit outside `owns` is a conflict: `REJECT` the wave and set `Stop` to `needs-human`. A verifier `REJECT` re-dispatches only that implementer. `PASS` only when every implementer row is `pass` and Conflicts is empty. Then dispatch the next wave, or start verify.
 
 After discuss is locked, work on a feature branch. Unrelated dirty files set `Stop` to `needs-human`.
 
@@ -143,13 +149,13 @@ Reject `PLAN.md` before any execute when a `REQ-` id has no task, a `REQ-` id is
 
 The verifier for that task writes `work/{slug}/checks/{task}.md`, from `templates/check.md`. The implementer does not. The verdict follows the command output.
 
-`REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. The verdict is `PASS` only when Breaks is empty, Outside is empty, and every Kept output matches. A green suite does not fill a Kept row.
+`REJECT` when Breaks is non-empty, Kept is missing, a Kept command was not run in this check, a Kept output disagrees with its quoted prior result, Outside is non-empty, the diff exports a name other than the task's produces line, the task verify command did not run, the expected result was paraphrased instead of quoted, or a screen changed and that flow was not exercised in the browser. The author of the code does not assign `PASS`. Otherwise `PASS`.
 
 ## Verify
 
 Write `work/{slug}/VERIFICATION.md` from `templates/verify.md`.
 
-A green suite with a gap is `REJECT`. `PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite does not fill a Kept row.
+`PASS` only when every `REQ-` id has a matching actual output, every Kept actual output matches its prior result, and Gaps and Outside are empty. A green suite with a gap is `REJECT`.
 
 ## Stop
 

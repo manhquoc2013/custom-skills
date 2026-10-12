@@ -16,7 +16,11 @@ Every skill in this pack uses this when it asks the user something.
 
 Each question lists every real proposal, one letter each, in the user's language. A is the recommended proposal and the label ends with `(Recommended)`. The next proposals are B, C, D, E, F, and so on for as many proposals as there are. The last choice is always `Người dùng quyết định`.
 
-Every question that can be asked now goes in one form. The user answers all of them, then submits once. On Cursor, one `AskQuestion` call carries that whole form. Do not call it once per question, and do not send the next question after a single answer. Without that tool, print every question in one message and wait for one reply that answers all of them.
+Every question that can be asked now goes in one form. The user answers all of them, then submits once. Read the shared harness file for the call that carries the whole form.
+
+- Cursor: `references/cursor.md`
+
+With no file for your harness, print every question in one message and wait for one reply that answers all of them.
 
 ```text
 Q1. <title>
@@ -51,7 +55,7 @@ These rules apply when the row matches. A missing plugin does not skip them. If 
 
 ## Records
 
-Any file this pack writes follows the Records section of `c-flow`. A heading is the label. The next line is the value. One fact per line. Do not join fields with `|`. An empty section is `none`.
+Any file this pack writes follows the Records section of `c-flow`.
 
 ## Roster
 
@@ -68,7 +72,7 @@ A row is finished only at `pass`: the verifier ran the done check, the actual ou
 
 ## Dispatch
 
-Rows with disjoint files go out in one response. Follow the parallel-worker floor. Each prompt contains only that row's task, `owns` list, and done check. The worker writes `work/{slug}/agents/{id}.md`, or `work/agents/{id}.md` when there is no slug, with the files it touched and the command output. It does not write the verdict.
+Rows with disjoint files go out in one response. Follow the parallel-worker floor. Each prompt contains only that row's task, `owns` list, and done check — build it from `templates/dispatch-implementer.md`, and the verifier's from `templates/dispatch-verifier.md`. The worker writes `work/{slug}/agents/{id}.md`, or `work/agents/{id}.md` when there is no slug, with the files it touched and the command output. It does not write the verdict.
 
 After those workers return, dispatch their verifiers and one watcher in the same response.
 

@@ -3,7 +3,6 @@ name: c-review
 description: >-
   Use when the user asks to review code, review a PR, review a branch, or
   review since a commit. Use for "review code", "soi diff", "review PR".
-  The review is read-only.
 ---
 
 # Reviewing code
