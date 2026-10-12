@@ -7,7 +7,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-dest="$1"
+dest="${1%$'\r'}"
 mkdir -p "$dest"
 
 names=(

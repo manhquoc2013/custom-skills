@@ -49,11 +49,16 @@ detects=()
 rels=()
 while IFS='|' read -r id label detect dests; do
   [[ -z "${id:-}" || "$id" == \#* ]] && continue
+  id="${id%$'\r'}"
+  label="${label%$'\r'}"
+  detect="${detect%$'\r'}"
+  dests="${dests%$'\r'}"
   ids+=("$id")
   labels+=("$label")
   detects+=("$detect")
   rels+=("$dests")
-done < "$agents_file"
+done < <(tr -d '\r' < "$agents_file")
+
 
 agent_present() {
   local spec="$1" token
@@ -95,7 +100,7 @@ status_of() {
 }
 
 install_one() {
-  local dest="$HOME/$1"
+  local dest="$HOME/${1%$'\r'}"
   "$linker" "$dest"
   printf '%s\n' "$version" > "$dest/.engineering-skills-version"
 }
@@ -115,7 +120,9 @@ agent_dests() {
   local IFS=','
   local -a dests=()
   read -r -a dests <<< "${rels[$idx]}"
-  printf '%s\n' "${dests[@]}"
+  for d in "${dests[@]}"; do
+    printf '%s\n' "${d%$'\r'}"
+  done
 }
 
 skill_present() {
@@ -142,6 +149,7 @@ bundle_missing() {
   local -a path_list missing=()
   read -r -a path_list <<< "$paths"
   for rel in "${path_list[@]}"; do
+    rel="${rel%$'\r'}"
     name="${rel##*/}"
     skill_present "$name" || missing+=("$name")
   done
@@ -153,11 +161,12 @@ print_recommended() {
   local id title repo branch paths any=0
   while IFS='|' read -r id title repo branch paths; do
     [[ -z "${id:-}" || "$id" == \#* ]] && continue
+    paths="${paths%$'\r'}"
     if bundle_missing "$paths" >/dev/null; then
       printf '  - %s\n' "$title"
       any=1
     fi
-  done < "$manifest"
+  done < <(tr -d '\r' < "$manifest")
   [[ "$any" -eq 1 ]]
 }
 
@@ -198,6 +207,7 @@ link_bundle_into() {
   local IFS=','
   read -r -a path_list <<< "$paths"
   for rel in "${path_list[@]}"; do
+    rel="${rel%$'\r'}"
     name="${rel##*/}"
     if skill_present "$name"; then
       echo "Đã có $name, không cài lại."
@@ -209,6 +219,7 @@ link_bundle_into() {
       continue
     fi
     for dest in "$@"; do
+      dest="${dest%$'\r'}"
       target="$HOME/$dest/$name"
       copy_tree "$src" "$target"
       echo "installed $name into $HOME/$dest"
@@ -221,16 +232,18 @@ install_recommended() {
   command -v git >/dev/null 2>&1 || { echo "Cần git để cài skill bổ sung." >&2; return 1; }
   while IFS='|' read -r id title repo branch paths; do
     [[ -z "${id:-}" || "$id" == \#* ]] && continue
+    paths="${paths%$'\r'}"
     if ! bundle_missing "$paths" >/dev/null; then
       echo "Đã có $title, không cài lại."
       continue
     fi
     sync_bundle "$id" "$repo" "$branch"
     link_bundle_into "$cache_root/$id" "$paths" "$@"
-  done < "$manifest"
+  done < <(tr -d '\r' < "$manifest")
   local dest
   for dest in "$@"; do
-    awk -F'|' '$1 !~ /^#/ && $1 != "" { print $1 }' "$manifest" > "$HOME/$dest/.engineering-skills-extras"
+    dest="${dest%$'\r'}"
+    awk -F'|' '$1 !~ /^#/ && $1 != "" { print $1 }' "$manifest" | tr -d '\r' > "$HOME/$dest/.engineering-skills-extras"
   done
 }
 
@@ -267,6 +280,7 @@ refresh_accepted() {
   local -a marked=()
   local rel
   for rel in "$@"; do
+    rel="${rel%$'\r'}"
     if [[ -f "$HOME/$rel/.engineering-skills-extras" ]]; then
       marked+=("$rel")
     fi

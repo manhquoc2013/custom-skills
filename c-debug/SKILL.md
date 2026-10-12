@@ -17,7 +17,7 @@ Stay on the caller's own path for a syntax or parse error, a compiler line that 
 
 ## Mode
 
-`--find` is the user's "chỉ tìm", "root cause", or `--find`. `--fix` is "sửa luôn", "fix it", or `--fix`. When `c-flow` is the caller, the mode is `--fix`. Do not ask. When neither word is present and this skill is the top-level request, ask once. A is `--find` (Recommended). B is `--fix`. The last choice is `Người dùng quyết định`. Do not edit production code before that answer.
+The default mode is `--fix`. `--find` is only used when the user explicitly requests "chỉ tìm", "root cause", or `--find`. When neither word is present or when `c-flow` is the caller, the mode is `--fix`. Do not ask. Do not edit production code before the cause is proven and quoted in `CAUSE.md`.
 
 ## Loop
 
