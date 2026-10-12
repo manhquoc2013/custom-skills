@@ -62,6 +62,8 @@ Read `c-skill/SKILL.md` before changing any skill body, and `c-agents/SKILL.md` 
 3. **`VERSION` drives `--update`.** An installed copy is recopied only when its version differs from this file. Bump it for anything users should receive.
 4. **One change ships to four harnesses.** Prefer wording that is neutral between them over a mechanism only one supports — for example Claude Code's `paths:` lazy-load frontmatter.
 
+5. **One story, one home.** When the same fact lives in more than one file, one file is the source and the others point at it or summarise it. Change the source first, then propagate. The install story's home is `c-install/SKILL.md`, which carries every flag; `README.md` and the Commands section above are summaries of it. The harness list's home is `c-agents/SKILL.md`.
+
 ## Committing
 
 `.ai-kit/memory.db` is tracked engine state that mutates on its own; `.ai-kit/memory.db-shm` and `.ai-kit/memory.db-wal` are untracked. Check `git status` before `git add` so engine state does not ride along with a content change.

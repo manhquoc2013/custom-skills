@@ -26,6 +26,16 @@ REQ-1
 <what you should see>
 ```
 
+A `REQ-` whose expected result nobody can state as something a command or a person could observe is marked `unverifiable`, with one line saying what is missing:
+
+```text
+REQ-3
+<what happens>
+unverifiable: <what is missing>
+```
+
+It is still a requirement. It is never a `PASS`. Mark it here, while the user is present — a verifier cannot later tell a requirement it cannot check from one it checked and found fine.
+
 When the request is several independent subsystems, stop. Name the pieces, ask which is first, and grill only that piece.
 
 Wait until the user says the list is complete and the understanding is shared. Then follow the design floor: write 2–3 approaches, the recommendation, and the accepted design into `work/{slug}/CONTEXT.md`. A one-behavior change still gets a few sentences and a yes. Set `Stop` to `none` only after that yes. Do not start plan before it. An empty frontier item, a missing approach choice, or no confirmation keeps `Stop` at `needs-human`.
