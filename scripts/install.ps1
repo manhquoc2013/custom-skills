@@ -49,10 +49,13 @@ $names = @(
   "c-flow",
   "c-design",
   "c-review",
+  "c-clarify",
   "c-refactor",
   "c-lint",
   "c-perf",
-  "c-debug"
+  "c-debug",
+  "c-retro",
+  "c-skill"
 )
 
 function Remove-SkillPath($path) {

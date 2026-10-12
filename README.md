@@ -85,7 +85,7 @@ Khi người dùng muốn dựng dự án, thêm chức năng, hoặc tự xử 
 Xóa đúng thư mục skill đã cài. Không xóa thư mục trong repo này.
 
 ```bash
-rm -rf ~/.cursor/skills/{c-install,c-agents,c-route,c-scaffold,c-spec,c-implement,c-prompt,c-loop,c-process,c-flow,c-design,c-review,c-refactor,c-lint,c-perf,c-debug,c-retro,c-skill} ~/.cursor/skills/.engineering-skills-version
+rm -rf ~/.cursor/skills/{c-install,c-agents,c-route,c-scaffold,c-spec,c-implement,c-prompt,c-loop,c-process,c-flow,c-design,c-review,c-clarify,c-refactor,c-lint,c-perf,c-debug,c-retro,c-skill} ~/.cursor/skills/.engineering-skills-version
 ```
 
 Đổi `~/.cursor/skills` thành thư mục của Claude, Antigravity, hoặc Codex nếu gỡ ở đó.
@@ -107,6 +107,7 @@ Một yêu cầu đi một nhánh. Nhánh sau chỉ bắt đầu khi nhánh trư
 | Làm hết một chức năng đến PR, hoặc làm tiếp từ `FLOW.md` đang dở | `/c-flow` | `VERIFICATION.md` là `PASS` và đã có PR hoặc câu commit |
 | Repo chưa có lệnh test, file harness, chỗ ghi việc | `/c-scaffold` | Session mới build và test được mà không hỏi lại |
 | Chỉ viết spec và plan, chưa đụng code | `/c-spec` | Có `GO` hoặc `NO-GO`. Plan chỉ xuất hiện sau `GO` |
+| Kiểm tra một tài liệu spec/yêu cầu và liệt kê mọi điểm chưa rõ thành câu hỏi | `/c-clarify` | Mỗi câu hỏi có nguồn, chưa plan, chưa code |
 | Plan đã có và đã `GO`, làm đúng một task | `/c-implement` | Lệnh kiểm của task đó qua một lượt verifier riêng |
 | Viết prompt, agent brief, hoặc lệnh slash cho session khác chạy | `/c-prompt` | File prompt đủ mục, mức mặc định là báo cáo |
 | Nghĩ ra một vòng sẽ chạy lặp lại (triage, CI, PR, changelog) | `/c-prompt`, rồi `/c-loop` | Prompt có trước. Vòng tuần đầu chỉ ghi báo cáo |

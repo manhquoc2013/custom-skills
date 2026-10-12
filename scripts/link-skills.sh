@@ -23,6 +23,7 @@ names=(
   c-flow
   c-design
   c-review
+  c-clarify
   c-refactor
   c-lint
   c-perf
